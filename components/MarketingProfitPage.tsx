@@ -1,322 +1,509 @@
 import React from "react";
-import { motion } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 
-// --- Theme Definition ---
+// --- Theme Configuration ---
 const theme = {
-  brand: {
-    50: "#eff6ff",
-    100: "#dbeafe",
-    200: "#bfdbfe",
-    300: "#93c5fd",
-    400: "#60a5fa",
-    500: "#3b82f6", // Primary Blue
-    600: "#2563eb",
-    700: "#1d4ed8",
-    800: "#1e40af",
-    900: "#1e3a8a",
-    950: "#020617", // Darkest slate/blue
-  },
-  surface: {
-    card: "#0f172a", // Slate 900
-    inner: "#1e293b", // Slate 800
+  bg: "#030712", // Deep Dark Blue/Black
+  primary: "#3b82f6",
+  accent: "#8b5cf6",
+  text: {
+    main: "#f8fafc",
+    muted: "#94a3b8",
   },
 };
 
-// --- Sub-Components ---
+const scrollToContact = () => {
+  const element = document.getElementById("contact");
+  if (element) {
+    element.scrollIntoView({ behavior: "smooth" });
+  }
+};
 
-// 1. The Tag Component (Blue pills)
-const Tag: React.FC<{ label: string; delay: number }> = ({ label, delay }) => (
-  <motion.span
-    initial={{ opacity: 0, y: 10 }}
-    animate={{ opacity: 1, y: 0 }}
-    transition={{ delay, duration: 0.5 }}
-    whileHover={{ scale: 1.05, backgroundColor: theme.brand[500] }}
-    style={{
-      backgroundColor: theme.brand[600],
-      color: "white",
-      padding: "0.5rem 1.25rem",
-      borderRadius: "4px",
-      fontSize: "0.85rem",
-      fontWeight: "600",
-      letterSpacing: "0.05em",
-      textTransform: "uppercase",
-      display: "inline-block",
-      cursor: "default",
-    }}
-  >
-    {label}
-  </motion.span>
-);
+// --- CSS Styles (Responsive Grid Logic) ---
+const styles = `
+  /* Global Reset */
+  * {
+    box-sizing: border-box;
+  }
 
-// 2. The Stat Card Component
-interface StatCardProps {
-  value: string;
-  label: string;
-  subLabel?: string;
-  isHighlighted?: boolean;
-  index: number;
-}
+  /* Base Container */
+  .container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
 
-const StatCard: React.FC<StatCardProps> = ({
-  value,
-  label,
-  subLabel,
-  isHighlighted,
-  index,
-}) => {
-  const cardStyle: React.CSSProperties = {
-    backgroundColor: isHighlighted ? theme.brand[600] : theme.surface.inner,
-    backgroundImage: isHighlighted
-      ? `linear-gradient(135deg, ${theme.brand[600]} 0%, ${theme.brand[800]} 100%)`
-      : "none",
-    padding: "2.5rem",
-    borderRadius: "12px",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    minHeight: "220px", // Ensures the "larger" feel
-    position: "relative",
-    color: "white",
-    boxShadow: isHighlighted
-      ? "0 20px 40px -10px rgba(37, 99, 235, 0.5)"
-      : "none",
-    border: isHighlighted ? "none" : "1px solid rgba(255,255,255,0.05)",
-  };
+  /* Grid Layout - Mobile First (1 Column) */
+  .bento-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem 0;
+  }
+
+  /* Card Heights */
+  .card-min-h {
+    min-height: 200px;
+  }
+
+  /* Tablet (2 Columns) */
+  @media (min-width: 768px) {
+    .bento-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+    
+    /* Utility classes for tablet placement */
+    .md-col-span-2 { grid-column: span 2; }
+  }
+
+  /* Desktop (3 Columns) */
+  @media (min-width: 1024px) {
+    .bento-grid {
+      grid-template-columns: repeat(3, 1fr);
+      grid-auto-rows: minmax(180px, auto);
+    }
+    
+    /* Specific Desktop Layout */
+    .lg-col-span-2 { grid-column: span 2; }
+    .lg-col-span-3 { grid-column: span 3; }
+    .lg-row-span-2 { grid-row: span 2; }
+  }
+`;
+
+// --- Components ---
+
+// 1. Spotlight Card
+const BentoCard = ({ children, className = "", title, sub }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }
 
   return (
     <motion.div
+      className={`card-min-h ${className}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: 0.2 + index * 0.1, duration: 0.5 }}
-      whileHover={{
-        y: -5,
-        boxShadow: isHighlighted
-          ? "0 30px 60px -12px rgba(37, 99, 235, 0.6)"
-          : "0 10px 30px -10px rgba(0,0,0,0.5)",
+      transition={{ duration: 0.5, ease: "easeOut" }}
+      onMouseMove={handleMouseMove}
+      style={{
+        position: "relative",
+        borderRadius: "24px",
+        backgroundColor: "rgba(15, 23, 42, 0.6)",
+        border: "1px solid rgba(255, 255, 255, 0.08)",
+        overflow: "hidden",
+        display: "flex",
+        flexDirection: "column",
+        padding: "1.75rem",
+        backdropFilter: "blur(12px)",
       }}
-      style={cardStyle}
     >
-      {/* Decorative Plus Icon in top right */}
+      {/* Spotlight Effect */}
+      <motion.div
+        style={{
+          pointerEvents: "none",
+          position: "absolute",
+          inset: -1,
+          opacity: 0,
+          background: useMotionTemplate`
+            radial-gradient(
+              600px circle at ${mouseX}px ${mouseY}px,
+              rgba(59, 130, 246, 0.15),
+              transparent 80%
+            )
+          `,
+          zIndex: 0,
+        }}
+        whileHover={{ opacity: 1 }}
+      />
+
+      {/* Content */}
       <div
         style={{
-          position: "absolute",
-          top: "20px",
-          right: "20px",
-          color: isHighlighted ? theme.brand[300] : theme.brand[500],
+          position: "relative",
+          zIndex: 10,
+          height: "100%",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-          <path
-            d="M12 4V20M4 12H20"
-            stroke="currentColor"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </svg>
+        {title && (
+          <div style={{ marginBottom: "1rem" }}>
+            <h3
+              style={{
+                fontSize: "1.1rem",
+                fontWeight: 600,
+                color: theme.text.main,
+                margin: 0,
+              }}
+            >
+              {title}
+            </h3>
+            {sub && (
+              <p
+                style={{
+                  fontSize: "0.85rem",
+                  color: theme.text.muted,
+                  marginTop: "4px",
+                }}
+              >
+                {sub}
+              </p>
+            )}
+          </div>
+        )}
+        <div style={{ flex: 1 }}>{children}</div>
       </div>
-
-      <div>
-        <motion.div
-          initial={{ scale: 0.9 }}
-          whileInView={{ scale: 1 }}
-          transition={{ delay: 0.4 + index * 0.1, type: "spring" }}
-          style={{
-            fontSize: "3.5rem",
-            fontWeight: "700",
-            lineHeight: 1,
-            marginBottom: "0.5rem",
-          }}
-        >
-          {value}
-        </motion.div>
-        <div style={{ fontSize: "1.1rem", opacity: 0.9 }}>{label}</div>
-      </div>
-
-      {subLabel && (
-        <div
-          style={{
-            fontSize: "0.9rem",
-            opacity: 0.6,
-            marginTop: "auto",
-            maxWidth: "80%",
-          }}
-        >
-          {subLabel}
-        </div>
-      )}
     </motion.div>
   );
 };
 
-// --- Main Page Component ---
-
-const MarketingProfitPage: React.FC = () => {
-  const containerStyle: React.CSSProperties = {
-    minHeight: "100vh",
-    backgroundColor: theme.brand[950],
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    padding: "2rem",
-    fontFamily: "'Inter', sans-serif",
-    color: "white",
-  };
-
-  // The Main "Dashboard" Container - Wider now
-  const dashboardStyle: React.CSSProperties = {
-    width: "100%",
-    maxWidth: "1200px", // Larger length as requested
-    backgroundColor: theme.surface.card,
-    borderRadius: "24px",
-    padding: "4rem",
-    boxShadow:
-      "0 0 0 1px rgba(255,255,255,0.05), 0 25px 50px -12px rgba(0,0,0,0.5)",
-  };
-
-  const headerSectionStyle: React.CSSProperties = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "2rem",
-    marginBottom: "4rem",
-  };
-
-  const gridStyle: React.CSSProperties = {
-    display: "grid",
-    gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", // Responsive 3-column
-    gap: "2rem",
-  };
-
-  return (
-    <div style={containerStyle}>
+// 2. Graph Component
+const GrowthGraph = () => (
+  <div
+    style={{
+      display: "flex",
+      alignItems: "flex-end",
+      height: "100%",
+      width: "100%",
+      gap: "8px",
+      paddingTop: "1rem",
+    }}
+  >
+    {[35, 60, 45, 70, 50, 80, 100].map((h, i) => (
       <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        style={dashboardStyle}
+        key={i}
+        initial={{ height: 0 }}
+        whileInView={{ height: `${h}%` }}
+        transition={{ delay: i * 0.1, duration: 1, type: "spring" }}
+        style={{
+          flex: 1,
+          background:
+            i === 6
+              ? `linear-gradient(to top, ${theme.primary}, ${theme.accent})`
+              : "rgba(255,255,255,0.05)",
+          borderRadius: "4px",
+          minHeight: "10px",
+        }}
+      />
+    ))}
+  </div>
+);
+
+// --- Icons ---
+const ArrowRight = () => (
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M5 12h14" />
+    <path d="m12 5 7 7-7 7" />
+  </svg>
+);
+const TrendingUp = () => (
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="#10b981"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+    <polyline points="17 6 23 6 23 12" />
+  </svg>
+);
+
+// --- Main Layout ---
+export default function ProfessionalBentoGrid() {
+  return (
+    <>
+      <style>{styles}</style>
+      <div
+        style={{
+          minHeight: "100vh",
+          backgroundColor: theme.bg,
+          color: theme.text.main,
+          fontFamily: "'Inter', system-ui, sans-serif",
+          padding: "2rem 0",
+          display: "flex",
+          justifyContent: "center",
+          overflowX: "hidden", // Prevent horizontal scroll on mobile
+        }}
       >
-        {/* Top Header Section */}
-        <div style={headerSectionStyle}>
-          <div
+        {/* Soft Ambient Glow (No Grid) */}
+        <div
+          style={{
+            position: "fixed",
+            top: "-20%",
+            right: "-10%",
+            width: "600px",
+            height: "600px",
+            background: theme.primary,
+            filter: "blur(250px)",
+            opacity: 0.15,
+            borderRadius: "50%",
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        />
+        <div
+          style={{
+            position: "fixed",
+            bottom: "-20%",
+            left: "-10%",
+            width: "500px",
+            height: "500px",
+            background: theme.accent,
+            filter: "blur(250px)",
+            opacity: 0.1,
+            borderRadius: "50%",
+            zIndex: 0,
+            pointerEvents: "none",
+          }}
+        />
+
+        <div className="container">
+          {/* Header */}
+          <header
             style={{
               display: "flex",
               justifyContent: "space-between",
-              alignItems: "flex-start",
+              alignItems: "center",
+              marginBottom: "3rem",
             }}
           >
+            <div
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "800",
+                letterSpacing: "-1px",
+              }}
+            >
+              EVOC LABS<span style={{ color: theme.primary }}>.</span>
+            </div>
+          </header>
+
+          {/* Hero Text */}
+          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
             <motion.h1
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3 }}
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
               style={{
-                fontSize: "3rem",
-                fontWeight: "700",
-                maxWidth: "700px",
+                fontSize: "clamp(2rem, 5vw, 4rem)",
+                fontWeight: "800",
                 lineHeight: 1.1,
-                margin: 0,
+                marginBottom: "1rem",
               }}
             >
-              Turn Marketing Spend Into{" "}
-              <motion.span
-                initial={{ color: "#ffffff" }}
-                animate={{ color: theme.brand[400] }}
-                transition={{ delay: 1, duration: 1 }}
-              >
-                Profit Engines
-              </motion.span>
+              Turn <span style={{ color: theme.primary }}>Spend</span> Into
+              Profit.
             </motion.h1>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5 }}
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
               style={{
-                fontWeight: "700",
-                letterSpacing: "0.1em",
-                fontSize: "1.2rem",
+                fontSize: "1.1rem",
+                color: theme.text.muted,
+                maxWidth: "600px",
+                margin: "0 auto",
               }}
             >
-              EVOC LABS
-            </motion.div>
+              Data-driven marketing strategies for modern brands.
+            </motion.p>
           </div>
 
-          {/* Tags Row */}
-          <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
-            {[
-              "Strategy",
-              "Creative",
-              "Media Buying",
-              "Data Analysis",
-              "CRO",
-            ].map((tag, i) => (
-              <Tag key={tag} label={tag} delay={0.6 + i * 0.1} />
-            ))}
+          {/* THE GRID */}
+          <div className="bento-grid">
+            {/* 1. Main Stat (Wide) */}
+            {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 2 cols */}
+            <BentoCard
+              className="md-col-span-2 lg-col-span-2"
+              title="Total Ad Spend Managed"
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  height: "100%",
+                  justifyContent: "flex-end",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "1rem",
+                    flexWrap: "wrap",
+                  }}
+                >
+                  <span
+                    style={{
+                      fontSize: "clamp(2.5rem, 4vw, 3rem)",
+                      fontWeight: "700",
+                      lineHeight: 1,
+                    }}
+                  >
+                    ₹2Cr+
+                  </span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "4px",
+                      background: "rgba(16, 185, 129, 0.1)",
+                      color: "#10b981",
+                      padding: "4px 8px",
+                      borderRadius: "8px",
+                      fontSize: "0.85rem",
+                      fontWeight: 600,
+                    }}
+                  >
+                    <TrendingUp /> 24%
+                  </div>
+                </div>
+                <p
+                  style={{
+                    marginTop: "1rem",
+                    color: theme.text.muted,
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  Optimized across Meta, Google, and LinkedIn.
+                </p>
+              </div>
+            </BentoCard>
+
+            {/* 2. Graph (Tall) */}
+            {/* Mobile: 1 col, Tablet: 1 col, Desktop: 1 col (Row Span 2) */}
+            <BentoCard
+              className="lg-row-span-2"
+              title="Growth Trajectory"
+              sub="Consistent scaling."
+            >
+              <GrowthGraph />
+            </BentoCard>
+
+            {/* 3. Expertise (Standard) */}
+            <BentoCard title="Our Expertise">
+              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
+                {["PPC", "Creative", "CRO", "Analytics"].map((tag) => (
+                  <span
+                    key={tag}
+                    style={{
+                      fontSize: "0.75rem",
+                      background: "rgba(255,255,255,0.05)",
+                      border: "1px solid rgba(255,255,255,0.1)",
+                      padding: "6px 10px",
+                      borderRadius: "8px",
+                      color: theme.text.main,
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <div style={{ marginTop: "auto", paddingTop: "1.5rem" }}>
+                <div style={{ fontSize: "1.5rem", fontWeight: "700" }}>4+</div>
+                <div style={{ color: theme.text.muted, fontSize: "0.8rem" }}>
+                  Years Exp.
+                </div>
+              </div>
+            </BentoCard>
+
+            {/* 4. Clients (Standard) */}
+            <BentoCard title="Brands Scaled">
+              <div
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  flexDirection: "column",
+                  paddingTop: "1rem",
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: "2.5rem",
+                    fontWeight: "800",
+                    color: theme.text.main,
+                  }}
+                >
+                  150+
+                </div>
+                <div style={{ color: theme.text.muted, fontSize: "0.9rem" }}>
+                  Global Partners
+                </div>
+              </div>
+            </BentoCard>
+
+            {/* CTA Button */}
+            {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 3 cols (Full Width Bottom) */}
+            <motion.button
+              onClick={scrollToContact}
+              className="md-col-span-2 lg-col-span-3"
+              whileHover={{ scale: 1.01 }}
+              whileTap={{ scale: 0.98 }}
+              style={{
+                width: "100%",
+                height: "100px",
+                background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
+                border: "none",
+                borderRadius: "24px",
+                padding: "0 2rem",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+                cursor: "pointer",
+                color: "white",
+                boxShadow: "0 10px 30px -5px rgba(59, 130, 246, 0.4)",
+              }}
+            >
+              <div style={{ textAlign: "left" }}>
+                <div style={{ fontSize: "1.2rem", fontWeight: "700" }}>
+                  Ready to scale?
+                </div>
+                <div style={{ opacity: 0.9, fontSize: "0.9rem" }}>
+                  Book your free strategy audit.
+                </div>
+              </div>
+
+              <div
+                style={{
+                  background: "rgba(255,255,255,0.2)",
+                  minWidth: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  marginLeft: "1rem",
+                }}
+              >
+                <ArrowRight />
+              </div>
+            </motion.button>
           </div>
         </div>
-
-        {/* Stats Grid Section */}
-        <div style={gridStyle}>
-          {/* Card 1: Highlighted (Blue) */}
-          <StatCard
-            index={0}
-            value="4+"
-            label="Years of Experience"
-            subLabel="Mastering the algorithm"
-            isHighlighted={true}
-          />
-
-          {/* Card 2: Dark */}
-          <StatCard
-            index={1}
-            value="150+"
-            label="Brands Scaled"
-            subLabel="From startups to enterprise"
-          />
-
-          {/* Card 3: Dark */}
-          <StatCard
-            index={2}
-            value="2CR+"
-            label="Ad Spend Managed"
-            subLabel="With profitable returns"
-          />
-        </div>
-
-        {/* Bottom CTA Area */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          transition={{ delay: 1 }}
-          style={{
-            marginTop: "4rem",
-            textAlign: "center",
-            borderTop: `1px solid ${theme.surface.inner}`,
-            paddingTop: "2rem",
-          }}
-        >
-          <motion.button
-            whileHover={{
-              scale: 1.05,
-              backgroundColor: theme.brand[600],
-              color: "white",
-            }}
-            whileTap={{ scale: 0.95 }}
-            style={{
-              backgroundColor: "transparent",
-              border: `1px solid ${theme.brand[600]}`,
-              color: theme.brand[400],
-              padding: "1rem 3rem",
-              borderRadius: "50px",
-              fontSize: "1rem",
-              cursor: "pointer",
-              fontWeight: "600",
-            }}
-          >
-            BOOK A STRATEGY CALL
-          </motion.button>
-        </motion.div>
-      </motion.div>
-    </div>
+      </div>
+    </>
   );
-};
-
-export default MarketingProfitPage;
+}
