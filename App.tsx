@@ -14,6 +14,8 @@ import LoadingScreen from "./components/LoadingScreen";
 import Contact from "./components/Contact";
 import VideoSection from "./components/VideoSection";
 import MarketingProfitPages from "./components/MarketingProfitPage";
+import LogoTicker from "./components/LogoTicker";
+import Process from "./components/Process";
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -32,6 +34,8 @@ function App() {
             <Hero />
             <VideoSection />
             <MarketingProfitPages />
+            <LogoTicker />
+            <Process />
             <Testimonials />
             <Results />
             <WhyChooseUs />

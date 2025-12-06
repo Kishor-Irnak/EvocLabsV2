@@ -1,45 +1,9 @@
 import React, { useState } from "react";
-import {
-  Mail,
-  Calendar,
-  ArrowRight,
-  CheckCircle,
-  Clock,
-  Video,
-} from "lucide-react";
+import { Mail, Clock, Video, ArrowRight, CheckCircle } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Contact: React.FC = () => {
-  const [formState, setFormState] = useState({
-    name: "",
-    email: "",
-    website: "",
-    budget: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-    }, 1500);
-  };
-
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >
-  ) => {
-    setFormState({
-      ...formState,
-      [e.target.name]: e.target.value,
-    });
-  };
 
   return (
     <section
@@ -48,7 +12,7 @@ const Contact: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          {/* Left Column: Context & Direct Booking */}
+          {/* Left Column */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -58,28 +22,27 @@ const Contact: React.FC = () => {
             <h2 className="text-sm font-medium text-brand-400 uppercase tracking-widest mb-3">
               Get Started
             </h2>
+
             <h3 className="text-4xl md:text-6xl font-display font-bold mb-6 text-white">
-              Ready to ignite <br />
-              your growth?
+              Ready to ignite <br /> your growth?
             </h3>
+
             <p className="text-slate-400 text-lg mb-10 leading-relaxed max-w-md">
-              Whether you're ready to scale aggressive or just need a second
-              opinion on your current ad stack, we're here to help.
+              Whether you're ready to scale aggressively or just need a second
+              opinion on your current ad stack — we're here to help.
             </p>
 
-            {/* Direct Booking Card */}
-            <div className="glass-card p-8 rounded-2xl border border-brand-500/10 relative overflow-hidden group hover:border-brand-500/30 transition-colors bg-slate-900/40">
-              {/* Subtle Background Icon */}
-
-              <h4 className="text-xl font-bold text-white mb-2 relative z-10">
+            {/* Strategy Card */}
+            <div className="glass-card p-8 rounded-2xl border border-brand-500/10 bg-slate-900/40">
+              <h4 className="text-xl font-bold text-white mb-2">
                 Book a Strategy Call
               </h4>
-              <p className="text-slate-400 mb-6 text-sm relative z-10">
+              <p className="text-slate-400 mb-6 text-sm">
                 Directly schedule a 30-min discovery session with our
-                specialized strategist.
+                strategist.
               </p>
 
-              <div className="flex flex-col gap-3 mb-8 relative z-10">
+              <div className="flex flex-col gap-3 mb-8">
                 <div className="flex items-center gap-3 text-slate-300 text-sm">
                   <Clock className="w-4 h-4 text-brand-400" />
                   <span>30 Minutes</span>
@@ -92,8 +55,8 @@ const Contact: React.FC = () => {
 
               <a
                 href="#"
-                onClick={(e) => e.preventDefault()} // Placeholder logic
-                className="inline-flex items-center justify-center w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-brand-500/10 relative z-10"
+                onClick={(e) => e.preventDefault()}
+                className="inline-flex items-center justify-center w-full bg-brand-600 hover:bg-brand-500 text-white font-bold py-3 rounded-lg transition-all shadow-lg shadow-brand-500/10"
               >
                 Schedule Now
               </a>
@@ -105,7 +68,7 @@ const Contact: React.FC = () => {
             </div>
           </motion.div>
 
-          {/* Right Column: Inquiry Form */}
+          {/* Contact Form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -115,141 +78,109 @@ const Contact: React.FC = () => {
           >
             <div className="glass-panel p-8 md:p-10 rounded-3xl border border-white/5 bg-slate-900/20">
               {!isSubmitted ? (
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form
+                  action="https://formsubmit.co/kishorirnak4u@gmail.com"
+                  method="POST"
+                  className="space-y-6"
+                  onSubmit={() => setIsSubmitted(true)}
+                >
+                  {/* FormSubmit Settings */}
+                  <input type="hidden" name="_captcha" value="false" />
+                  <input
+                    type="hidden"
+                    name="_subject"
+                    value="New Contact Request - EvocLabs"
+                  />
+
+                  {/* Redirect after submit */}
+                  <input
+                    type="hidden"
+                    name="_next"
+                    value="https://evoclabs.com/success"
+                  />
+
+                  {/* Name */}
                   <div>
-                    <label
-                      htmlFor="name"
-                      className="block text-sm font-medium text-slate-300 mb-2"
-                    >
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
                       Name
                     </label>
                     <input
                       type="text"
-                      id="name"
                       name="name"
                       required
-                      value={formState.name}
-                      onChange={handleChange}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-brand-500 focus:ring-brand-500"
                       placeholder="John Doe"
                     />
                   </div>
 
+                  {/* Work Email */}
                   <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-slate-300 mb-2"
-                    >
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
                       Work Email
                     </label>
                     <input
                       type="email"
-                      id="email"
                       name="email"
                       required
-                      value={formState.email}
-                      onChange={handleChange}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-brand-500 focus:ring-brand-500"
                       placeholder="john@company.com"
                     />
                   </div>
 
+                  {/* Website + Budget */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
-                      <label
-                        htmlFor="website"
-                        className="block text-sm font-medium text-slate-300 mb-2"
-                      >
+                      <label className="block text-sm font-medium text-slate-300 mb-2">
                         Website URL
                       </label>
                       <input
                         type="url"
-                        id="website"
                         name="website"
-                        value={formState.website}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600"
+                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-brand-500 focus:ring-brand-500"
                         placeholder="https://"
                       />
                     </div>
+
                     <div>
-                      <label
-                        htmlFor="budget"
-                        className="block text-sm font-medium text-slate-300 mb-2"
-                      >
+                      <label className="block text-sm font-medium text-slate-300 mb-2">
                         Monthly Ad Budget
                       </label>
                       <select
-                        id="budget"
                         name="budget"
-                        value={formState.budget}
-                        onChange={handleChange}
-                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all"
+                        className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-brand-500 focus:ring-brand-500"
                       >
-                        <option
-                          value=""
-                          className="bg-slate-900 text-slate-400"
-                        >
-                          Select Range
-                        </option>
-                        <option value="<1k" className="bg-slate-900 text-white">
-                          &lt; $5,000
-                        </option>
-                        <option
-                          value="1k-5k"
-                          className="bg-slate-900 text-white"
-                        >
-                          $5,000 - $20,000
-                        </option>
-                        <option
-                          value="5k-10k"
-                          className="bg-slate-900 text-white"
-                        >
-                          $20,000 - $50,000
-                        </option>
-                        <option
-                          value="10k+"
-                          className="bg-slate-900 text-white"
-                        >
-                          $50,000+
-                        </option>
+                        <option value="">Select Range</option>
+                        <option value="<5k">Less than $5k</option>
+                        <option value="5k-20k">$5k – $20k</option>
+                        <option value="20k-50k">$20k – $50k</option>
+                        <option value="50k+">$50k+</option>
                       </select>
                     </div>
                   </div>
 
+                  {/* Message */}
                   <div>
-                    <label
-                      htmlFor="message"
-                      className="block text-sm font-medium text-slate-300 mb-2"
-                    >
+                    <label className="block text-sm font-medium text-slate-300 mb-2">
                       How can we help?
                     </label>
                     <textarea
-                      id="message"
                       name="message"
                       rows={4}
-                      value={formState.message}
-                      onChange={handleChange}
-                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-brand-500 focus:ring-1 focus:ring-brand-500 transition-all placeholder:text-slate-600 resize-none"
+                      className="w-full bg-slate-900/50 border border-white/10 rounded-lg px-4 py-3 text-white focus:border-brand-500 focus:ring-brand-500 resize-none"
                       placeholder="Tell us about your goals..."
                     ></textarea>
                   </div>
 
+                  {/* Submit Button */}
                   <button
                     type="submit"
-                    disabled={isSubmitting}
-                    className="w-full bg-white text-slate-950 font-bold py-3.5 rounded-lg hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-70 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+                    className="w-full bg-white text-slate-950 font-bold py-3.5 rounded-lg hover:bg-slate-200 transition-colors flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(255,255,255,0.1)]"
                   >
-                    {isSubmitting ? (
-                      <div className="w-5 h-5 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>
-                    ) : (
-                      <>
-                        Send Request <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
+                    Send Request <ArrowRight className="w-4 h-4" />
                   </button>
+
                   <p className="text-center text-xs text-slate-500 mt-4">
-                    No commitment required. We usually respond within 24 hours.
+                    No commitment required — we respond within 24 hours.
                   </p>
                 </form>
               ) : (
@@ -261,16 +192,18 @@ const Contact: React.FC = () => {
                   <div className="w-16 h-16 bg-brand-500/20 rounded-full flex items-center justify-center mb-6">
                     <CheckCircle className="w-8 h-8 text-brand-500" />
                   </div>
+
                   <h3 className="text-2xl font-bold text-white mb-2">
                     Request Received!
                   </h3>
+
                   <p className="text-slate-400 max-w-xs">
-                    Thanks {formState.name.split(" ")[0]}. We've received your
-                    details and will be in touch shortly to schedule your call.
+                    Thanks! Your details have been successfully submitted.
                   </p>
+
                   <button
                     onClick={() => setIsSubmitted(false)}
-                    className="mt-8 text-sm text-brand-400 hover:text-brand-300 underline"
+                    className="mt-8 text-sm text-brand-400 underline"
                   >
                     Send another request
                   </button>

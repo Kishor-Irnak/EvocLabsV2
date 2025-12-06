@@ -154,8 +154,8 @@ const Hero = () => {
             isLoaded ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
           }`}
         >
-          We combine data-driven marketing, cutting-edge branding, and robust
-          web development to build experiences that convert.
+          We help e-commerce brands fix bottlenecks and scale smoothly with
+          performance-driven systems and zero upfront risk.
         </p>
 
         {/* Buttons */}
