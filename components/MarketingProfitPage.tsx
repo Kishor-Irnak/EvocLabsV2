@@ -1,262 +1,298 @@
-import React from "react";
-import { motion, useMotionTemplate, useMotionValue, useSpring, useInView } from "framer-motion";
+import React, { useRef, useState, useEffect } from "react";
+import { motion, useMotionValue, useSpring, useInView, animate } from "framer-motion";
+import { ArrowRight, TrendingUp, Layers, Users, Zap } from "lucide-react";
 import BlurText from "./BlurText";
 
-// --- CountUp Component ---
 const CountUp = ({ 
   to, 
   prefix = "", 
   suffix = "", 
   delay = 0,
-  formatter 
+  decimals = 0,
+  duration = 2.5
 }: { 
   to: number; 
   prefix?: string; 
   suffix?: string; 
   delay?: number;
-  formatter?: (val: number) => string;
+  decimals?: number;
+  duration?: number;
 }) => {
-  const ref = React.useRef<HTMLSpanElement>(null);
-  const motionValue = useMotionValue(0);
-  const springValue = useSpring(motionValue, { stiffness: 50, damping: 20 });
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-20px" });
 
-  React.useEffect(() => {
-    if (isInView) {
-      const timeout = setTimeout(() => {
-        motionValue.set(to);
-      }, delay * 1000);
-      return () => clearTimeout(timeout);
+  useEffect(() => {
+    if (isInView && ref.current) {
+      const node = ref.current;
+      
+      const controls = animate(0, to, {
+        duration,
+        delay,
+        ease: "easeOut",
+        onUpdate: (value) => {
+          const formatted = value.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+          node.textContent = `${prefix}${formatted}${suffix}`;
+        },
+      });
+
+      return () => controls.stop();
     }
-  }, [isInView, to, motionValue, delay]);
+  }, [isInView, to, delay, duration, decimals, prefix, suffix]);
 
-  React.useEffect(() => {
-    return springValue.on("change", (latest) => {
-      if (ref.current) {
-        if (formatter) {
-           ref.current.textContent = formatter(latest);
-        } else {
-           ref.current.textContent = `${prefix}${Math.floor(latest).toLocaleString()}${suffix}`;
-        }
-      }
-    });
-  }, [springValue, prefix, suffix, formatter]);
-
-  return <span ref={ref}>0</span>;
+  return <span ref={ref} className="tabular-nums tracking-tight">0</span>;
 };
 
-const BentoCard: React.FC<{ children: React.ReactNode; className?: string; title?: string; sub?: string }> = ({
-  children,
-  className = "",
-  title,
-  sub,
-}) => {
+// --- Advanced Component: Spotlight Card ---
+// Tracks mouse position to create a moving glow effect
+const SpotlightCard: React.FC<{ 
+  children: React.ReactNode; 
+  className?: string; 
+  title?: string; 
+  sub?: string;
+  icon?: React.ReactNode;
+}> = ({ children, className = "", title, sub, icon }) => {
+  const divRef = useRef<HTMLDivElement>(null);
+  const [isFocused, setIsFocused] = useState(false);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!divRef.current) return;
+    const rect = divRef.current.getBoundingClientRect();
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    setOpacity(1);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    setOpacity(0);
+  };
+
+  const handleMouseEnter = () => {
+    setOpacity(1);
+  };
+
+  const handleMouseLeave = () => {
+    setOpacity(0);
+  };
+
   return (
     <motion.div
-      className={`relative p-8 rounded-2xl bg-surface border border-border flex flex-col overflow-hidden transition-colors hover:border-primary/50 group ${className}`}
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={`relative p-6 md:p-8 rounded-3xl bg-white/5 border border-white/10 overflow-hidden group ${className}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: "easeOut" }}
     >
+      {/* The Spotlight Overlay */}
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+        style={{
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59, 130, 246, 0.15), transparent 40%)`,
+        }}
+      />
+      
+      {/* Content Layer */}
       <div className="relative z-10 flex flex-col h-full">
-        {title && (
-          <div className="mb-4">
-            <h3 className="text-lg font-semibold text-text-main">{title}</h3>
-            {sub && <p className="text-sm text-text-muted mt-1">{sub}</p>}
+        {(title || icon) && (
+          <div className="mb-6 flex items-start justify-between">
+            <div>
+                {title && <h3 className="text-lg font-semibold text-white tracking-tight">{title}</h3>}
+                {sub && <p className="text-sm text-white/50 mt-1 font-medium">{sub}</p>}
+            </div>
+            {icon && (
+                <div className="p-2 rounded-lg bg-white/5 border border-white/10 text-blue-400">
+                    {icon}
+                </div>
+            )}
           </div>
         )}
         <div className="flex-1">{children}</div>
       </div>
-      {/* Subtle Glow on Hover */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+      {/* Border Highlight on Hover */}
+      <div
+        className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-transparent group-hover:ring-white/20 transition-all duration-300"
+        style={{ pointerEvents: 'none' }}
+      />
     </motion.div>
   );
 };
 
-// 2. Graph Component
+// --- Component: Dynamic Graph ---
 const GrowthGraph = () => (
-  <div className="flex items-end h-full w-full gap-2 pt-4">
-    {[35, 60, 45, 70, 50, 80, 100].map((h, i) => (
+  <div className="flex items-end h-full w-full gap-1.5 pt-6 pb-2">
+    {[30, 45, 35, 60, 50, 75, 65, 85, 80, 100].map((h, i) => (
       <motion.div
         key={i}
         initial={{ height: 0 }}
         whileInView={{ height: `${h}%` }}
-        transition={{ delay: i * 0.1, duration: 1, type: "spring" }}
-        className={`flex-1 rounded-sm transition-colors duration-300 ${
-          i === 6 ? "bg-primary" : "bg-white/10 hover:bg-primary"
-        }`}
+        transition={{ delay: i * 0.05, duration: 0.8, type: "spring", bounce: 0 }}
+        className="flex-1 rounded-t-sm bg-gradient-to-t from-blue-600/20 to-blue-500 hover:to-blue-400 transition-colors duration-300 opacity-80 hover:opacity-100"
         style={{ minHeight: "10px" }}
       />
     ))}
   </div>
 );
 
-// --- Icons ---
-const ArrowRightIcon = () => (
-  <svg
-    width="20"
-    height="20"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <path d="M5 12h14" />
-    <path d="m12 5 7 7-7 7" />
-  </svg>
-);
-const TrendingUp = () => (
-  <svg
-    width="24"
-    height="24"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-  >
-    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
-    <polyline points="17 6 23 6 23 12" />
-  </svg>
-);
-
 // --- Main Layout ---
-export default function ProfessionalBentoGrid() {
+export default function BentoGrid() {
   const scrollToContact = () => {
     const element = document.getElementById("contact");
     if (element) {
       element.scrollIntoView({ behavior: "smooth" });
     }
   };
-  
-  // Formatter for Spend (0 -> 200 Lakhs -> 2Cr)
-  const spendFormatter = React.useCallback((val: number) => {
-     const v = Math.floor(val);
-     if (v >= 100) {
-        const cr = v / 100;
-        // Clean format: 1.50 -> 1.5, 2.00 -> 2
-        const formatted = cr.toFixed(2).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
-        return `₹${formatted}Cr+`;
-     }
-     return `₹${v} Lakhs`;
-  }, []);
 
   return (
-    <div className="min-h-screen bg-background text-text-main font-sans py-16 md:py-24 flex justify-center overflow-x-hidden relative">
-      <div className="max-w-7xl w-full px-6 relative z-10">
-        {/* Header */}
-        <header className="flex justify-between items-center mb-16">
-          <div className="text-2xl font-bold tracking-tight text-text-main">
-            EVOC LABS<span className="text-primary">.</span>
-          </div>
-        </header>
+    <div className="min-h-screen bg-background text-text-main font-sans flex flex-col items-center relative overflow-hidden py-24 md:py-32">
+      
+      {/* Ambient Background Glows */}
+      <div className="absolute top-20 left-1/4 w-96 h-96 bg-blue-600/10 blur-[128px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-20 right-1/4 w-96 h-96 bg-purple-600/10 blur-[128px] rounded-full pointer-events-none" />
 
-        {/* Hero Text */}
-        <div className="text-center mb-16">
-          <div className="mb-4">
-            <BlurText
+      <div className="max-w-6xl w-full px-6 relative z-10">
+        
+        {/* Header Section */}
+        <div className="text-center mb-20 md:mb-28">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-mono uppercase tracking-wider mb-6">
+             <Zap className="w-3 h-3" />
+             <span>Performance Data</span>
+          </div>
+          
+          <div className="mb-6">
+             <BlurText
               text="Turn Spend Into Profit."
-              className="text-4xl md:text-6xl font-semibold leading-tight text-text-main tracking-tight"
+              className="text-4xl md:text-6xl font-bold leading-tight text-white tracking-tighter"
             />
           </div>
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-lg text-text-muted max-w-2xl mx-auto"
-          >
-            Data-driven marketing strategies for modern brands.
-          </motion.p>
+          
+          <p className="text-lg text-white/60 max-w-2xl mx-auto font-light leading-relaxed">
+             We don't just run ads; we engineer growth systems. <br className="hidden md:block"/> Here is the impact we have generated for our partners.
+          </p>
         </div>
 
-        {/* THE GRID */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
+        {/* --- THE BENTO GRID --- */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(180px,auto)]">
+          
           {/* 1. Main Stat (Wide) */}
-          <BentoCard
-            className="md:col-span-2 lg:col-span-2"
+          <SpotlightCard
+            className="md:col-span-2 lg:col-span-2 min-h-[220px]"
             title="Total Ad Spend Managed"
+            icon={<Layers className="w-5 h-5" />}
           >
-            <div className="flex flex-col h-full justify-end">
-              <div className="flex items-center gap-4 flex-wrap">
-                <span className="text-5xl md:text-6xl font-bold text-text-main tracking-tighter">
-                  <CountUp to={200} formatter={spendFormatter} delay={0.2} />
+            <div className="flex flex-col h-full justify-end pb-2">
+              <div className="flex items-baseline gap-4 flex-wrap">
+                <span className="text-5xl md:text-6xl font-bold text-white tracking-tighter">
+                  <CountUp to={2.4} prefix="₹" suffix=" Cr+" decimals={1} delay={0.2} />
                 </span>
-                <div className="flex items-center gap-1 bg-green-500/10 text-green-500 px-2 py-1 rounded-md text-sm font-semibold">
-                  <TrendingUp /> <CountUp to={24} suffix="%" delay={0.4} />
+                <div className="flex items-center gap-1.5 text-emerald-400 bg-emerald-400/10 px-2.5 py-1 rounded-md text-sm font-semibold border border-emerald-400/20">
+                  <TrendingUp className="w-3.5 h-3.5" />
+                  <span>+24% ROI</span>
                 </div>
               </div>
-              <p className="mt-4 text-text-muted text-sm md:text-base">
-                Optimized across Meta, Google, and LinkedIn.
+              <p className="mt-4 text-white/50 text-sm font-medium">
+                Optimized across Meta, Google, and LinkedIn for maximum efficiency.
               </p>
             </div>
-          </BentoCard>
+          </SpotlightCard>
 
           {/* 2. Graph (Tall) */}
-          <BentoCard
+          <SpotlightCard
             className="lg:row-span-2 min-h-[300px]"
             title="Growth Trajectory"
-            sub="Consistent scaling."
+            sub="Consistent month-over-month scaling."
           >
             <GrowthGraph />
-          </BentoCard>
+          </SpotlightCard>
 
-          {/* 3. Expertise (Standard) */}
-          <BentoCard title="Our Expertise">
-            <div className="flex flex-wrap gap-2">
-              {["PPC", "Creative", "CRO", "Analytics"].map((tag) => (
-                <span
+          {/* 3. Expertise (Compact) */}
+          <SpotlightCard title="Core Expertise" icon={<Zap className="w-5 h-5" />}>
+            <div className="flex flex-wrap gap-2 mt-2">
+              {["PPC", "Creative Strategy", "CRO", "Data Analytics", "Attribution"].map((tag) => (
+                <span 
                   key={tag}
-                  className="text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded-md text-text-main"
+                  className="text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded-full text-white/80 hover:bg-white/10 hover:border-white/20 transition-colors cursor-default"
                 >
                   {tag}
                 </span>
               ))}
             </div>
-            <div className="mt-auto pt-6">
-              <div className="text-3xl font-bold text-text-main">
+            <div className="mt-8 flex items-end gap-2">
+              <div className="text-4xl font-bold text-white tracking-tighter">
                 <CountUp to={4} suffix="+" delay={0.3} />
               </div>
-              <div className="text-text-muted text-sm">
-                Years Exp.
+              <div className="text-white/50 text-sm mb-1.5 font-medium">
+                Years of Excellence
               </div>
             </div>
-          </BentoCard>
+          </SpotlightCard>
 
-          {/* 4. Clients (Standard) */}
-          <BentoCard title="Brands Scaled">
-            <div className="h-full flex flex-col items-center justify-center pt-4">
-              <div className="text-5xl font-bold text-text-main tracking-tighter">
-                <CountUp to={150} suffix="+" delay={0.4} />
-              </div>
-              <div className="text-text-muted text-sm mt-2">
-                Global Partners
-              </div>
-            </div>
-          </BentoCard>
+          {/* 4. Clients (Compact) */}
+          <SpotlightCard title="Brands Scaled" icon={<Users className="w-5 h-5" />}>
+             <div className="h-full flex flex-col justify-end pb-2">
+               <div className="text-5xl font-bold text-white tracking-tighter">
+                 <CountUp to={150} suffix="+" delay={0.4} />
+               </div>
+               <div className="text-white/50 text-sm mt-2 font-medium">
+                 Global Partners across 12 industries.
+               </div>
+             </div>
+          </SpotlightCard>
 
-          {/* CTA Button */}
+          {/* 5. CTA Button (Full Width Bottom) */}
+{/* 5. CTA Button with Spotlight Effect */}
           <motion.button
             onClick={scrollToContact}
-            className="md:col-span-2 lg:col-span-3 w-full h-24 bg-surface border border-border hover:bg-primary-hover rounded-2xl px-8 flex items-center justify-between text-white cursor-pointer transition-colors shadow-lg shadow-primary/20 group"
+            // 1. Add mouse tracking logic directly to the button
+            onMouseMove={(e: React.MouseEvent<HTMLButtonElement>) => {
+              const rect = e.currentTarget.getBoundingClientRect();
+              e.currentTarget.style.setProperty('--x', `${e.clientX - rect.left}px`);
+              e.currentTarget.style.setProperty('--y', `${e.clientY - rect.top}px`);
+            }}
+            className="md:col-span-2 lg:col-span-3 w-full h-24 mt-4 relative overflow-hidden rounded-3xl bg-white/5 border border-white/10 group cursor-pointer"
             whileHover={{ scale: 1.01 }}
             whileTap={{ scale: 0.98 }}
           >
-            <div className="text-left">
-              <div className="text-xl font-bold">
-                Ready to scale?
-              </div>
-              <div className="text-sm opacity-90">
-                Book your free strategy audit.
-              </div>
-            </div>
+             {/* Spotlight Overlay (Uses CSS Variables set by onMouseMove) */}
+             <div
+               className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+               style={{
+                 background: `radial-gradient(600px circle at var(--x) var(--y), rgba(59, 130, 246, 0.15), transparent 40%)`,
+               }}
+             />
 
-            <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
-              <ArrowRightIcon />
-            </div>
+             {/* Border Highlight on Hover */}
+             <div
+               className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-transparent group-hover:ring-white/20 transition-all duration-300 pointer-events-none"
+             />
+
+             {/* Content */}
+             <div className="relative z-10 flex items-center justify-between px-8 h-full">
+               <div className="text-left">
+                 <div className="text-xl md:text-2xl font-bold text-white tracking-tight group-hover:text-blue-200 transition-colors duration-300">
+                   Ready to scale your revenue?
+                 </div>
+                 <div className="text-white/50 text-sm mt-1 font-medium group-hover:text-white/80 transition-colors duration-300">
+                   Book your free strategy audit today.
+                 </div>
+               </div>
+
+               {/* Icon Circle - Matching the Grid Style */}
+               <div className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/70 group-hover:bg-blue-600 group-hover:border-blue-500 group-hover:text-white transition-all duration-300 shadow-lg">
+                 <ArrowRight className="w-6 h-6 transform group-hover:translate-x-1 transition-transform" />
+               </div>
+             </div>
           </motion.button>
         </div>
       </div>

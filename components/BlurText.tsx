@@ -29,12 +29,10 @@ const BlurText: React.FC<BlurTextProps> = ({
   const childVariants: Variants = {
     hidden: {
       opacity: 0,
-      filter: "blur(10px)",
       y: 10,
     },
     visible: {
       opacity: 1,
-      filter: "blur(0px)",
       y: 0,
       transition: {
         type: "spring",
@@ -51,7 +49,7 @@ const BlurText: React.FC<BlurTextProps> = ({
 
   return (
     <motion.span
-      className={`inline-block ${className}`}
+      className={className}
       variants={containerVariants}
       initial="hidden"
       whileInView="visible"
@@ -60,13 +58,14 @@ const BlurText: React.FC<BlurTextProps> = ({
       {words.map((word, wordIndex) => (
         <span
           key={wordIndex}
-          className="inline-block whitespace-nowrap mr-[0.25em]" // keep word together, add space
+          className="inline whitespace-nowrap mr-[0.25em]" // keep word together, add space
         >
           {word.split("").map((char, charIndex) => (
             <motion.span
               key={`${wordIndex}-${charIndex}`}
               variants={childVariants}
               className="inline-block"
+              style={{ color: 'inherit' }}
             >
               {char}
             </motion.span>

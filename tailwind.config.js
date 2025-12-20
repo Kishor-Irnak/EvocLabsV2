@@ -31,9 +31,14 @@ export default {
           '0%': { backgroundPosition: '200% 0' },
           '100%': { backgroundPosition: '-200% 0' },
         },
+        'sheer-shine': {
+          '0%': { backgroundPosition: '200% center' },
+          '100%': { backgroundPosition: '-200% center' },
+        },
       },
       animation: {
         shimmer: 'shimmer 8s ease-in-out infinite',
+        'sheer-shine': 'sheer-shine 6s linear infinite',
       }
     },
   },

@@ -6,12 +6,25 @@ import EvocLogo from "../assets/EvocLab_Logo.png";
 const Navbar: React.FC = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
+  const lastScrollY = React.useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
+      const currentScrollY = window.scrollY;
+      
+      // Determine direction and toggle visibility
+      if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
+        setIsVisible(false); // Hide on scroll down
+      } else {
+        setIsVisible(true); // Show on scroll up
+      }
+
+      setIsScrolled(currentScrollY > 20);
+      lastScrollY.current = currentScrollY;
     };
-    window.addEventListener("scroll", handleScroll);
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
@@ -29,7 +42,9 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+      className={`fixed top-0 w-full z-50 transition-all duration-300 transform ${
+        isVisible ? "translate-y-0" : "-translate-y-full"
+      } ${
         isScrolled
           ? "bg-background/80 backdrop-blur-md border-b border-border py-4"
           : "bg-transparent py-6"

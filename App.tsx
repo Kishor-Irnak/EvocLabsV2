@@ -9,7 +9,6 @@ import Testimonials from "./components/Testimonials";
 import FAQ from "./components/FAQ";
 import Founder from "./components/Founder";
 import Footer from "./components/Footer";
-import Cursor from "./components/Cursor";
 import LoadingScreen from "./components/LoadingScreen";
 import Contact from "./components/Contact";
 import MarketingProfitPages from "./components/MarketingProfitPage";
@@ -27,7 +26,6 @@ function App() {
 
       {!loading && (
         <>
-          <Cursor />
           <Navbar />
           <main>
             <Hero />
