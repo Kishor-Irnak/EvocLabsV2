@@ -1,43 +1,119 @@
-import React from "react";
-import { Briefcase } from "lucide-react";
+import React, { useRef } from "react";
+import { Briefcase, Hexagon, Triangle, Circle, Square } from "lucide-react";
+import { 
+  motion, 
+  useScroll, 
+  useSpring, 
+  useTransform, 
+  useMotionValue, 
+  useVelocity, 
+  useAnimationFrame 
+} from "framer-motion";
 
 const clients = [
-  "Acme Corp",
-  "Nebula",
-  "Velocity",
-  "Turing",
-  "Orbit",
-  "Flux",
-  "Vertex",
-  "Zenith",
+  { name: "Acme Corp", icon: Briefcase },
+  { name: "Nebula", icon: Hexagon },
+  { name: "Velocity", icon: Triangle },
+  { name: "Turing", icon: Circle },
+  { name: "Orbit", icon: Square },
+  { name: "Flux", icon: Hexagon },
+  { name: "Vertex", icon: Triangle },
+  { name: "Zenith", icon: Briefcase },
+  { name: "Pinnacle", icon: Circle },
+  { name: "Apex", icon: Square },
 ];
+
+// 4 sets for smoother seamless loop
+const duplicatedClients = [...clients, ...clients, ...clients, ...clients];
+
+const wrap = (min: number, max: number, v: number) => {
+  const rangeSize = max - min;
+  return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
+};
+
+const LogoStrip = ({ 
+  baseVelocity = 100,
+  className = "" 
+}: { 
+  baseVelocity: number;
+  className?: string;
+}) => {
+  const baseX = useMotionValue(0);
+  const { scrollY } = useScroll();
+  const scrollVelocity = useVelocity(scrollY);
+  const smoothVelocity = useSpring(scrollVelocity, {
+    damping: 50,
+    stiffness: 400
+  });
+  const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
+    clamp: false
+  });
+
+  // Wrap at -25% (since we have 4 sets, one set is 25% of width)
+  // We move FROM 0 TO -25% then wrap back to 0
+  const x = useTransform(baseX, (v) => `${wrap(0, -25, v)}%`);
+
+  const directionFactor = useRef<number>(1);
+  useAnimationFrame((t, delta) => {
+    let moveBy = directionFactor.current * baseVelocity * (delta / 1000);
+
+    // Apply scroll velocity (make it faster when scrolling)
+    if (velocityFactor.get() < 0) {
+      directionFactor.current = -1;
+    } else if (velocityFactor.get() > 0) {
+      directionFactor.current = 1;
+    }
+
+    moveBy += directionFactor.current * moveBy * Math.abs(velocityFactor.get());
+
+    baseX.set(baseX.get() + moveBy);
+  });
+
+  return (
+    <div className={`flex relative overflow-hidden ${className}`}>
+        <motion.div
+          className="flex gap-8 flex-nowrap"
+          style={{ x }}
+        >
+          {duplicatedClients.map((client, i) => (
+            <div
+              key={i}
+              className="flex items-center gap-3 px-8 py-4 bg-surface/50 border border-border/50 rounded-xl backdrop-blur-sm whitespace-nowrap min-w-[200px]"
+            >
+              <client.icon className="w-5 h-5 text-primary opacity-80" />
+              <span className="font-semibold text-text-main text-lg tracking-tight">
+                {client.name}
+              </span>
+            </div>
+          ))}
+        </motion.div>
+    </div>
+  );
+};
 
 const Testimonials: React.FC = () => {
   return (
-    <section className="relative pt-20 pb-20 bg-slate-950">
-      {/* Top Fade Gradient to blend with Hero */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#020617] to-slate-950 z-0 pointer-events-none"></div>
+    <section className="relative py-24 bg-background overflow-hidden flex flex-col items-center justify-center">
+      {/* Background Gradients */}
+      <div className="absolute inset-0 bg-transparent z-10 pointer-events-none bg-gradient-to-b from-background via-transparent to-background" />
+      <div className="absolute inset-0 bg-transparent z-10 pointer-events-none bg-gradient-to-r from-background via-transparent to-background" />
 
-      <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
-        {/* Client Wall */}
-        <h3 className="text-2xl font-display font-bold mb-12">
-          Clients We Have Worked With
-        </h3>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {clients.map((client, i) => (
-            <div
-              key={i}
-              className="group h-24 bg-slate-900/50 border border-white/5 rounded-lg flex items-center justify-center hover:bg-brand-900/20 hover:border-brand-500/30 transition-all cursor-default"
-            >
-              <div className="flex items-center gap-2">
-                <Briefcase className="w-5 h-5 text-slate-600 group-hover:text-brand-400 transition-colors" />
-                <span className="font-display font-semibold text-slate-400 group-hover:text-white transition-colors">
-                  {client}
-                </span>
-              </div>
-            </div>
-          ))}
-        </div>
+      <div className="max-w-7xl mx-auto px-6 text-center relative z-20 mb-16">
+        <p className="text-sm font-medium text-text-secondary uppercase tracking-wider">
+          Brands we work with
+        </p>
+      </div>
+
+      {/* 3D Container */}
+      <div className="relative w-full max-w-[120vw] -rotate-3 skew-y-3 scale-110 opacity-80 hover:opacity-100 transition-opacity duration-500">
+         {/* Strip 1 - Left */}
+         <LogoStrip baseVelocity={-2} className="mb-6 opacity-60" />
+         
+         {/* Strip 2 (Main) - Right */}
+         <LogoStrip baseVelocity={2} className="mb-6 scale-110 z-10" />
+         
+         {/* Strip 3 - Left */}
+         <LogoStrip baseVelocity={-2} className="opacity-60" />
       </div>
     </section>
   );

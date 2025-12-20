@@ -1,205 +1,99 @@
 import React from "react";
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue, useSpring, useInView } from "framer-motion";
+import BlurText from "./BlurText";
 
-// --- Theme Configuration ---
-const theme = {
-  bg: "#030712", // Deep Dark Blue/Black
-  primary: "#3b82f6",
-  accent: "#8b5cf6",
-  text: {
-    main: "#f8fafc",
-    muted: "#94a3b8",
-  },
+// --- CountUp Component ---
+const CountUp = ({ 
+  to, 
+  prefix = "", 
+  suffix = "", 
+  delay = 0,
+  formatter 
+}: { 
+  to: number; 
+  prefix?: string; 
+  suffix?: string; 
+  delay?: number;
+  formatter?: (val: number) => string;
+}) => {
+  const ref = React.useRef<HTMLSpanElement>(null);
+  const motionValue = useMotionValue(0);
+  const springValue = useSpring(motionValue, { stiffness: 50, damping: 20 });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
+
+  React.useEffect(() => {
+    if (isInView) {
+      const timeout = setTimeout(() => {
+        motionValue.set(to);
+      }, delay * 1000);
+      return () => clearTimeout(timeout);
+    }
+  }, [isInView, to, motionValue, delay]);
+
+  React.useEffect(() => {
+    return springValue.on("change", (latest) => {
+      if (ref.current) {
+        if (formatter) {
+           ref.current.textContent = formatter(latest);
+        } else {
+           ref.current.textContent = `${prefix}${Math.floor(latest).toLocaleString()}${suffix}`;
+        }
+      }
+    });
+  }, [springValue, prefix, suffix, formatter]);
+
+  return <span ref={ref}>0</span>;
 };
 
-const scrollToContact = () => {
-  const element = document.getElementById("contact");
-  if (element) {
-    element.scrollIntoView({ behavior: "smooth" });
-  }
-};
-
-// --- CSS Styles (Responsive Grid Logic) ---
-const styles = `
-  /* Global Reset */
-  * {
-    box-sizing: border-box;
-  }
-
-  /* Base Container */
-  .container {
-    width: 90%;
-    max-width: 1100px;
-    margin: 0 auto;
-    position: relative;
-    z-index: 1;
-  }
-
-  /* Grid Layout - Mobile First (1 Column) */
-  .bento-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
-    padding: 1rem 0;
-  }
-
-  /* Card Heights */
-  .card-min-h {
-    min-height: 200px;
-  }
-
-  /* Tablet (2 Columns) */
-  @media (min-width: 768px) {
-    .bento-grid {
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1.5rem;
-    }
-    
-    /* Utility classes for tablet placement */
-    .md-col-span-2 { grid-column: span 2; }
-  }
-
-  /* Desktop (3 Columns) */
-  @media (min-width: 1024px) {
-    .bento-grid {
-      grid-template-columns: repeat(3, 1fr);
-      grid-auto-rows: minmax(180px, auto);
-    }
-    
-    /* Specific Desktop Layout */
-    .lg-col-span-2 { grid-column: span 2; }
-    .lg-col-span-3 { grid-column: span 3; }
-    .lg-row-span-2 { grid-row: span 2; }
-  }
-`;
-
-// --- Components ---
-
-// 1. Spotlight Card
-const BentoCard = ({ children, className = "", title, sub }) => {
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-
-  function handleMouseMove({ currentTarget, clientX, clientY }) {
-    const { left, top } = currentTarget.getBoundingClientRect();
-    mouseX.set(clientX - left);
-    mouseY.set(clientY - top);
-  }
-
+const BentoCard: React.FC<{ children: React.ReactNode; className?: string; title?: string; sub?: string }> = ({
+  children,
+  className = "",
+  title,
+  sub,
+}) => {
   return (
     <motion.div
-      className={`card-min-h ${className}`}
+      className={`relative p-8 rounded-2xl bg-surface border border-border flex flex-col overflow-hidden transition-colors hover:border-primary/50 group ${className}`}
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, ease: "easeOut" }}
-      onMouseMove={handleMouseMove}
-      style={{
-        position: "relative",
-        borderRadius: "24px",
-        backgroundColor: "rgba(15, 23, 42, 0.6)",
-        border: "1px solid rgba(255, 255, 255, 0.08)",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-        padding: "1.75rem",
-        backdropFilter: "blur(12px)",
-      }}
     >
-      {/* Spotlight Effect */}
-      <motion.div
-        style={{
-          pointerEvents: "none",
-          position: "absolute",
-          inset: -1,
-          opacity: 0,
-          background: useMotionTemplate`
-            radial-gradient(
-              600px circle at ${mouseX}px ${mouseY}px,
-              rgba(59, 130, 246, 0.15),
-              transparent 80%
-            )
-          `,
-          zIndex: 0,
-        }}
-        whileHover={{ opacity: 1 }}
-      />
-
-      {/* Content */}
-      <div
-        style={{
-          position: "relative",
-          zIndex: 10,
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
+      <div className="relative z-10 flex flex-col h-full">
         {title && (
-          <div style={{ marginBottom: "1rem" }}>
-            <h3
-              style={{
-                fontSize: "1.1rem",
-                fontWeight: 600,
-                color: theme.text.main,
-                margin: 0,
-              }}
-            >
-              {title}
-            </h3>
-            {sub && (
-              <p
-                style={{
-                  fontSize: "0.85rem",
-                  color: theme.text.muted,
-                  marginTop: "4px",
-                }}
-              >
-                {sub}
-              </p>
-            )}
+          <div className="mb-4">
+            <h3 className="text-lg font-semibold text-text-main">{title}</h3>
+            {sub && <p className="text-sm text-text-muted mt-1">{sub}</p>}
           </div>
         )}
-        <div style={{ flex: 1 }}>{children}</div>
+        <div className="flex-1">{children}</div>
       </div>
+      {/* Subtle Glow on Hover */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
     </motion.div>
   );
 };
 
 // 2. Graph Component
 const GrowthGraph = () => (
-  <div
-    style={{
-      display: "flex",
-      alignItems: "flex-end",
-      height: "100%",
-      width: "100%",
-      gap: "8px",
-      paddingTop: "1rem",
-    }}
-  >
+  <div className="flex items-end h-full w-full gap-2 pt-4">
     {[35, 60, 45, 70, 50, 80, 100].map((h, i) => (
       <motion.div
         key={i}
         initial={{ height: 0 }}
         whileInView={{ height: `${h}%` }}
         transition={{ delay: i * 0.1, duration: 1, type: "spring" }}
-        style={{
-          flex: 1,
-          background:
-            i === 6
-              ? `linear-gradient(to top, ${theme.primary}, ${theme.accent})`
-              : "rgba(255,255,255,0.05)",
-          borderRadius: "4px",
-          minHeight: "10px",
-        }}
+        className={`flex-1 rounded-sm transition-colors duration-300 ${
+          i === 6 ? "bg-primary" : "bg-white/10 hover:bg-primary"
+        }`}
+        style={{ minHeight: "10px" }}
       />
     ))}
   </div>
 );
 
 // --- Icons ---
-const ArrowRight = () => (
+const ArrowRightIcon = () => (
   <svg
     width="20"
     height="20"
@@ -220,7 +114,7 @@ const TrendingUp = () => (
     height="24"
     viewBox="0 0 24 24"
     fill="none"
-    stroke="#10b981"
+    stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
     strokeLinejoin="round"
@@ -232,278 +126,140 @@ const TrendingUp = () => (
 
 // --- Main Layout ---
 export default function ProfessionalBentoGrid() {
+  const scrollToContact = () => {
+    const element = document.getElementById("contact");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  
+  // Formatter for Spend (0 -> 200 Lakhs -> 2Cr)
+  const spendFormatter = React.useCallback((val: number) => {
+     const v = Math.floor(val);
+     if (v >= 100) {
+        const cr = v / 100;
+        // Clean format: 1.50 -> 1.5, 2.00 -> 2
+        const formatted = cr.toFixed(2).replace(/\.00$/, "").replace(/(\.\d)0$/, "$1");
+        return `₹${formatted}Cr+`;
+     }
+     return `₹${v} Lakhs`;
+  }, []);
+
   return (
-    <>
-      <style>{styles}</style>
-      <div
-        style={{
-          minHeight: "100vh",
-          backgroundColor: theme.bg,
-          color: theme.text.main,
-          fontFamily: "'Inter', system-ui, sans-serif",
-          padding: "2rem 0",
-          display: "flex",
-          justifyContent: "center",
-          overflowX: "hidden", // Prevent horizontal scroll on mobile
-        }}
-      >
-        {/* Soft Ambient Glow (No Grid) */}
-        <div
-          style={{
-            position: "fixed",
-            top: "-20%",
-            right: "-10%",
-            width: "600px",
-            height: "600px",
-            background: theme.primary,
-            filter: "blur(250px)",
-            opacity: 0.15,
-            borderRadius: "50%",
-            zIndex: 0,
-            pointerEvents: "none",
-          }}
-        />
-        <div
-          style={{
-            position: "fixed",
-            bottom: "-20%",
-            left: "-10%",
-            width: "500px",
-            height: "500px",
-            background: theme.accent,
-            filter: "blur(250px)",
-            opacity: 0.1,
-            borderRadius: "50%",
-            zIndex: 0,
-            pointerEvents: "none",
-          }}
-        />
+    <div className="min-h-screen bg-background text-text-main font-sans py-16 md:py-24 flex justify-center overflow-x-hidden relative">
+      <div className="max-w-7xl w-full px-6 relative z-10">
+        {/* Header */}
+        <header className="flex justify-between items-center mb-16">
+          <div className="text-2xl font-bold tracking-tight text-text-main">
+            EVOC LABS<span className="text-primary">.</span>
+          </div>
+        </header>
 
-        <div className="container">
-          {/* Header */}
-          <header
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              marginBottom: "3rem",
-            }}
+        {/* Hero Text */}
+        <div className="text-center mb-16">
+          <div className="mb-4">
+            <BlurText
+              text="Turn Spend Into Profit."
+              className="text-4xl md:text-6xl font-semibold leading-tight text-text-main tracking-tight"
+            />
+          </div>
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="text-lg text-text-muted max-w-2xl mx-auto"
           >
-            <div
-              style={{
-                fontSize: "1.5rem",
-                fontWeight: "800",
-                letterSpacing: "-1px",
-              }}
-            >
-              EVOC LABS<span style={{ color: theme.primary }}>.</span>
+            Data-driven marketing strategies for modern brands.
+          </motion.p>
+        </div>
+
+        {/* THE GRID */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
+          {/* 1. Main Stat (Wide) */}
+          <BentoCard
+            className="md:col-span-2 lg:col-span-2"
+            title="Total Ad Spend Managed"
+          >
+            <div className="flex flex-col h-full justify-end">
+              <div className="flex items-center gap-4 flex-wrap">
+                <span className="text-5xl md:text-6xl font-bold text-text-main tracking-tighter">
+                  <CountUp to={200} formatter={spendFormatter} delay={0.2} />
+                </span>
+                <div className="flex items-center gap-1 bg-green-500/10 text-green-500 px-2 py-1 rounded-md text-sm font-semibold">
+                  <TrendingUp /> <CountUp to={24} suffix="%" delay={0.4} />
+                </div>
+              </div>
+              <p className="mt-4 text-text-muted text-sm md:text-base">
+                Optimized across Meta, Google, and LinkedIn.
+              </p>
             </div>
-          </header>
+          </BentoCard>
 
-          {/* Hero Text */}
-          <div style={{ textAlign: "center", marginBottom: "3rem" }}>
-            <motion.h1
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              style={{
-                fontSize: "clamp(2rem, 5vw, 4rem)",
-                fontWeight: "800",
-                lineHeight: 1.1,
-                marginBottom: "1rem",
-              }}
-            >
-              Turn <span style={{ color: theme.primary }}>Spend</span> Into
-              Profit.
-            </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              style={{
-                fontSize: "1.1rem",
-                color: theme.text.muted,
-                maxWidth: "600px",
-                margin: "0 auto",
-              }}
-            >
-              Data-driven marketing strategies for modern brands.
-            </motion.p>
-          </div>
+          {/* 2. Graph (Tall) */}
+          <BentoCard
+            className="lg:row-span-2 min-h-[300px]"
+            title="Growth Trajectory"
+            sub="Consistent scaling."
+          >
+            <GrowthGraph />
+          </BentoCard>
 
-          {/* THE GRID */}
-          <div className="bento-grid">
-            {/* 1. Main Stat (Wide) */}
-            {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 2 cols */}
-            <BentoCard
-              className="md-col-span-2 lg-col-span-2"
-              title="Total Ad Spend Managed"
-            >
-              <div
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  height: "100%",
-                  justifyContent: "flex-end",
-                }}
-              >
-                <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: "1rem",
-                    flexWrap: "wrap",
-                  }}
+          {/* 3. Expertise (Standard) */}
+          <BentoCard title="Our Expertise">
+            <div className="flex flex-wrap gap-2">
+              {["PPC", "Creative", "CRO", "Analytics"].map((tag) => (
+                <span
+                  key={tag}
+                  className="text-xs bg-white/5 border border-white/10 px-3 py-1.5 rounded-md text-text-main"
                 >
-                  <span
-                    style={{
-                      fontSize: "clamp(2.5rem, 4vw, 3rem)",
-                      fontWeight: "700",
-                      lineHeight: 1,
-                    }}
-                  >
-                    ₹2Cr+
-                  </span>
-                  <div
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      gap: "4px",
-                      background: "rgba(16, 185, 129, 0.1)",
-                      color: "#10b981",
-                      padding: "4px 8px",
-                      borderRadius: "8px",
-                      fontSize: "0.85rem",
-                      fontWeight: 600,
-                    }}
-                  >
-                    <TrendingUp /> 24%
-                  </div>
-                </div>
-                <p
-                  style={{
-                    marginTop: "1rem",
-                    color: theme.text.muted,
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  Optimized across Meta, Google, and LinkedIn.
-                </p>
+                  {tag}
+                </span>
+              ))}
+            </div>
+            <div className="mt-auto pt-6">
+              <div className="text-3xl font-bold text-text-main">
+                <CountUp to={4} suffix="+" delay={0.3} />
               </div>
-            </BentoCard>
+              <div className="text-text-muted text-sm">
+                Years Exp.
+              </div>
+            </div>
+          </BentoCard>
 
-            {/* 2. Graph (Tall) */}
-            {/* Mobile: 1 col, Tablet: 1 col, Desktop: 1 col (Row Span 2) */}
-            <BentoCard
-              className="lg-row-span-2"
-              title="Growth Trajectory"
-              sub="Consistent scaling."
-            >
-              <GrowthGraph />
-            </BentoCard>
+          {/* 4. Clients (Standard) */}
+          <BentoCard title="Brands Scaled">
+            <div className="h-full flex flex-col items-center justify-center pt-4">
+              <div className="text-5xl font-bold text-text-main tracking-tighter">
+                <CountUp to={150} suffix="+" delay={0.4} />
+              </div>
+              <div className="text-text-muted text-sm mt-2">
+                Global Partners
+              </div>
+            </div>
+          </BentoCard>
 
-            {/* 3. Expertise (Standard) */}
-            <BentoCard title="Our Expertise">
-              <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem" }}>
-                {["PPC", "Creative", "CRO", "Analytics"].map((tag) => (
-                  <span
-                    key={tag}
-                    style={{
-                      fontSize: "0.75rem",
-                      background: "rgba(255,255,255,0.05)",
-                      border: "1px solid rgba(255,255,255,0.1)",
-                      padding: "6px 10px",
-                      borderRadius: "8px",
-                      color: theme.text.main,
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
+          {/* CTA Button */}
+          <motion.button
+            onClick={scrollToContact}
+            className="md:col-span-2 lg:col-span-3 w-full h-24 bg-surface border border-border hover:bg-primary-hover rounded-2xl px-8 flex items-center justify-between text-white cursor-pointer transition-colors shadow-lg shadow-primary/20 group"
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <div className="text-left">
+              <div className="text-xl font-bold">
+                Ready to scale?
               </div>
-              <div style={{ marginTop: "auto", paddingTop: "1.5rem" }}>
-                <div style={{ fontSize: "1.5rem", fontWeight: "700" }}>4+</div>
-                <div style={{ color: theme.text.muted, fontSize: "0.8rem" }}>
-                  Years Exp.
-                </div>
+              <div className="text-sm opacity-90">
+                Book your free strategy audit.
               </div>
-            </BentoCard>
+            </div>
 
-            {/* 4. Clients (Standard) */}
-            <BentoCard title="Brands Scaled">
-              <div
-                style={{
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  flexDirection: "column",
-                  paddingTop: "1rem",
-                }}
-              >
-                <div
-                  style={{
-                    fontSize: "2.5rem",
-                    fontWeight: "800",
-                    color: theme.text.main,
-                  }}
-                >
-                  150+
-                </div>
-                <div style={{ color: theme.text.muted, fontSize: "0.9rem" }}>
-                  Global Partners
-                </div>
-              </div>
-            </BentoCard>
-
-            {/* CTA Button */}
-            {/* Mobile: 1 col, Tablet: 2 cols, Desktop: 3 cols (Full Width Bottom) */}
-            <motion.button
-              onClick={scrollToContact}
-              className="md-col-span-2 lg-col-span-3"
-              whileHover={{ scale: 1.01 }}
-              whileTap={{ scale: 0.98 }}
-              style={{
-                width: "100%",
-                height: "100px",
-                background: `linear-gradient(135deg, ${theme.primary}, ${theme.accent})`,
-                border: "none",
-                borderRadius: "24px",
-                padding: "0 2rem",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-between",
-                cursor: "pointer",
-                color: "white",
-                boxShadow: "0 10px 30px -5px rgba(59, 130, 246, 0.4)",
-              }}
-            >
-              <div style={{ textAlign: "left" }}>
-                <div style={{ fontSize: "1.2rem", fontWeight: "700" }}>
-                  Ready to scale?
-                </div>
-                <div style={{ opacity: 0.9, fontSize: "0.9rem" }}>
-                  Book your free strategy audit.
-                </div>
-              </div>
-
-              <div
-                style={{
-                  background: "rgba(255,255,255,0.2)",
-                  minWidth: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  marginLeft: "1rem",
-                }}
-              >
-                <ArrowRight />
-              </div>
-            </motion.button>
-          </div>
+            <div className="bg-white/20 w-10 h-10 rounded-full flex items-center justify-center group-hover:bg-white/30 transition-colors">
+              <ArrowRightIcon />
+            </div>
+          </motion.button>
         </div>
       </div>
-    </>
+    </div>
   );
 }

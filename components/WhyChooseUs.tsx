@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { PieChart, Pie, Sector, ResponsiveContainer, Cell } from "recharts";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles } from "lucide-react";
+import BlurText from "./BlurText";
 
 // --- Data ---
 const data = [
@@ -11,8 +12,7 @@ const data = [
   { name: "Analysis", value: 15, desc: "Data-driven scaling" },
 ];
 
-// Updated colors to match the Blue/Indigo theme
-const COLORS = ["#3b82f6", "#6366f1", "#0ea5e9", "#2563eb"];
+const COLORS = ["#3B82F6", "#2563EB", "#1D4ED8", "#60A5FA"];
 
 // --- Animations ---
 const containerVariants = {
@@ -58,6 +58,7 @@ const renderActiveShape = (props: any) => {
   );
 };
 
+
 const WhyChooseUs: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
@@ -77,15 +78,7 @@ const WhyChooseUs: React.FC = () => {
   };
 
   return (
-    <section className="py-16 md:py-32 bg-slate-950 relative overflow-hidden">
-      {/* --- Background Elements (Clean, No Grid) --- */}
-
-      {/* Ambient Glows */}
-      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-blue-600/10 rounded-full blur-[80px] md:blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[300px] h-[300px] md:w-[500px] md:h-[500px] bg-indigo-600/10 rounded-full blur-[80px] md:blur-[120px]" />
-      </div>
-
+    <section id="why-us" className="py-16 md:py-32 bg-background relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           {/* --- Left Content --- */}
@@ -100,22 +93,19 @@ const WhyChooseUs: React.FC = () => {
             <div className="flex items-center justify-center lg:justify-start">
               <motion.div
                 variants={itemVariants}
-                className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-medium uppercase tracking-widest mb-6"
+                className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface border border-border text-text-secondary text-xs font-medium uppercase tracking-wider mb-6"
               >
                 <Sparkles className="w-3 h-3" />
                 Strategic Edge
               </motion.div>
             </div>
 
-            <motion.h2
-              variants={itemVariants}
-              className="text-3xl md:text-5xl font-bold mb-8 md:mb-10 text-white leading-tight text-center lg:text-left"
-            >
-              Why brands choose <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">
-                Evoc Labs
-              </span>
-            </motion.h2>
+            <div className="mb-8 md:mb-10 text-center lg:text-left">
+              <BlurText
+                 text="Why brands choose Evoc Labs"
+                 className="text-3xl md:text-5xl font-semibold text-text-main leading-tight"
+              />
+            </div>
 
             <div className="space-y-4">
               {[
@@ -139,16 +129,16 @@ const WhyChooseUs: React.FC = () => {
                 <motion.div
                   key={idx}
                   variants={itemVariants}
-                  className="group flex gap-4 md:gap-5 p-4 rounded-xl bg-slate-900/50 border border-white/5 transition-all duration-300 hover:bg-slate-800/50 hover:border-blue-500/30 backdrop-blur-sm"
+                  className="group flex gap-4 md:gap-5 p-4 rounded-lg bg-surface border border-border transition-colors hover:border-primary/50"
                 >
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 font-bold text-sm group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
+                  <div className="flex-shrink-0 w-8 h-8 rounded-md bg-background border border-border flex items-center justify-center text-text-secondary font-semibold text-sm group-hover:bg-primary group-hover:text-white transition-all">
                     {idx + 1}
                   </div>
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-1 group-hover:text-blue-300 transition-colors">
+                    <h4 className="text-base font-semibold text-text-main mb-1">
                       {item.title}
                     </h4>
-                    <p className="text-slate-400 text-sm leading-relaxed">
+                    <p className="text-text-muted text-sm leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
@@ -167,9 +157,9 @@ const WhyChooseUs: React.FC = () => {
           >
             {/* Chart Container */}
             <div className="relative w-full max-w-[320px] md:max-w-[500px] aspect-square">
-              {/* Spinning Decorative Rings - Styled to Theme */}
-              <div className="absolute inset-0 rounded-full border border-white/5 animate-[spin_20s_linear_infinite]" />
-              <div className="absolute inset-8 md:inset-12 rounded-full border border-blue-500/10 animate-[spin_15s_linear_infinite_reverse]" />
+              {/* Spinning Decorative Rings - Subtler */}
+              <div className="absolute inset-0 rounded-full border border-surfaceHighlight" />
+              <div className="absolute inset-8 md:inset-12 rounded-full border border-surfaceHighlight/50" />
 
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -209,10 +199,10 @@ const WhyChooseUs: React.FC = () => {
                     exit={{ opacity: 0, y: -5 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <span className="block text-4xl md:text-6xl font-bold text-white tracking-tighter drop-shadow-[0_0_15px_rgba(59,130,246,0.5)]">
+                    <span className="block text-4xl md:text-6xl font-bold text-white tracking-tighter">
                       {data[activeIndex].value}%
                     </span>
-                    <span className="text-xs md:text-sm font-medium text-blue-400 uppercase tracking-widest mt-2 block">
+                    <span className="text-xs md:text-sm font-medium text-text-secondary uppercase tracking-widest mt-2 block">
                       {data[activeIndex].name}
                     </span>
                   </motion.div>

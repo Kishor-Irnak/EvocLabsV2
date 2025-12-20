@@ -77,7 +77,7 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.5 }}
-          className="mb-12 flex justify-center"
+          className="mb-6 flex justify-center"
         >
           <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center shadow-2xl shadow-brand-500/20">
             <img src={EvocLogo} alt="Evoc Labs Logo" className="w-12 h-12" />
@@ -104,7 +104,7 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({
         <div className="h-1 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm relative">
           {/* Animated Bar */}
           <motion.div
-            className="absolute top-0 left-0 h-full bg-gradient-to-r from-brand-400 to-violet-500"
+            className="absolute top-0 left-0 h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}
             transition={{ type: "tween", ease: "linear", duration: 0.2 }}

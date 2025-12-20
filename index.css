@@ -1,3 +1,22 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Dark Mode Variables as Default */
+    --background: #050505;
+    --surface: #0a0a0a;
+    --surface-highlight: #121212;
+    --text-main: #fafafa;
+    --text-secondary: #a1a1aa;
+    --text-muted: #52525b;
+    --border: #272727;
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+  }
+}
+
 html,
 body {
   overflow-x: hidden !important;

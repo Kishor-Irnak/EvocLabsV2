@@ -16,52 +16,38 @@
     />
     <script>
       tailwind.config = {
+        darkMode: "class",
         theme: {
           extend: {
             fontFamily: {
               sans: ["Inter", "sans-serif"],
-              display: ["Space Grotesk", "sans-serif"],
+              display: ["Inter", "sans-serif"], // Unified font
             },
             colors: {
-              brand: {
-                50: "#eff6ff",
-                100: "#dbeafe",
-                200: "#bfdbfe",
-                300: "#93c5fd",
-                400: "#60a5fa",
-                500: "#3b82f6", // Blue 500 - Primary Brand Color
-                600: "#2563eb",
-                700: "#1d4ed8",
-                800: "#1e40af",
-                900: "#1e3a8a",
-                950: "#172554",
+              background: "#050505",
+              surface: "#0A0A0A",
+              surfaceHighlight: "#121212",
+              border: "#27272A", // Zinc 800
+              input: "#27272A",
+              primary: {
+                DEFAULT: "#3B82F6", // Blue 500
+                hover: "#2563EB", // Blue 600
+                glow: "rgba(59, 130, 246, 0.5)",
               },
-              accent: {
-                DEFAULT: "#3b82f6",
-                glow: "#60a5fa",
+              text: {
+                main: "#FFFFFF",
+                secondary: "#A1A1AA", // Zinc 400
+                muted: "#52525B", // Zinc 600
               },
+            },
+            borderRadius: {
+              lg: "8px",
+              md: "6px",
+              sm: "4px",
             },
             backgroundImage: {
-              // Changed grid lines to a deep blue (#172554)
-              "grid-pattern":
-                "linear-gradient(to right, #172554 1px, transparent 1px), linear-gradient(to bottom, #172554 1px, transparent 1px)",
-            },
-            animation: {
-              "spin-slow": "spin 12s linear infinite",
-              "pulse-slow": "pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-              "gradient-x": "gradient-x 3s ease infinite",
-            },
-            keyframes: {
-              "gradient-x": {
-                "0%, 100%": {
-                  "background-size": "200% 200%",
-                  "background-position": "left center",
-                },
-                "50%": {
-                  "background-size": "200% 200%",
-                  "background-position": "right center",
-                },
-              },
+              "subtle-grid":
+                "linear-gradient(to right, #27272A 1px, transparent 1px), linear-gradient(to bottom, #27272A 1px, transparent 1px)",
             },
           },
         },
@@ -69,38 +55,35 @@
     </script>
     <style>
       html {
-        scroll-padding-top: 100px; /* Offset for fixed navbar */
+        scroll-padding-top: 80px;
+        background-color: #050505;
       }
       body {
-        background-color: #020617; /* Slate 950 (Keep very dark base) */
-        color: #ffffff;
+        background-color: #050505;
+        color: #FFFFFF;
         overflow-x: hidden;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
       }
-      .glass-card {
-        background: rgba(15, 23, 42, 0.7); /* Darker blue-ish glass */
-        backdrop-filter: blur(16px);
-        border: 1px solid rgba(59, 130, 246, 0.1); /* Slight blue tint border */
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+      
+      /* Utilities */
+      .text-balance {
+        text-wrap: balance;
       }
-      .glass-panel {
-        background: rgba(255, 255, 255, 0.02);
-        backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 255, 255, 0.05);
-        box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-      }
-      /* Custom scrollbar */
+
+      /* Minimal Scrollbar */
       ::-webkit-scrollbar {
-        width: 8px;
+        width: 6px;
       }
       ::-webkit-scrollbar-track {
-        background: #020617;
+        background: transparent;
       }
       ::-webkit-scrollbar-thumb {
-        background: #172554; /* Blue 950 */
-        border-radius: 4px;
+        background: #27272A;
+        border-radius: 3px;
       }
       ::-webkit-scrollbar-thumb:hover {
-        background: #2563eb; /* Blue 600 */
+        background: #3F3F46;
       }
     </style>
     <script type="importmap">

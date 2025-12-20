@@ -9,6 +9,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { motion } from "framer-motion";
+import BlurText from "./BlurText";
 
 const data = [
   { name: "Jan", prev: 2000, current: 2400 },
@@ -21,7 +22,7 @@ const data = [
 
 const Results: React.FC = () => {
   return (
-    <section id="results" className="py-24 relative bg-[#020617]">
+    <section id="results" className="py-24 relative bg-background border-t border-border/50">
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Chart Section */}
@@ -33,31 +34,27 @@ const Results: React.FC = () => {
               transition={{ duration: 0.7 }}
               className="relative pl-0 md:pl-4"
             >
-              {/* Subtle Blue Glow behind chart only */}
-              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80%] h-[80%] bg-blue-600/10 rounded-full blur-[80px] opacity-40"></div>
-
-              <div className="relative">
+              <div className="relative p-6 rounded-xl border border-border bg-surface">
                 <div className="flex justify-between items-center mb-8 px-2">
                   <div>
-                    <h3 className="text-slate-500 text-xs uppercase tracking-widest font-medium mb-1">
+                    <h3 className="text-text-secondary text-xs uppercase tracking-widest font-medium mb-1">
                       ROAS Growth
                     </h3>
-                    <p className="text-3xl font-display font-bold text-white">
+                    <p className="text-3xl font-semibold text-text-main">
                       4.6X{" "}
-                      <span className="text-base font-normal text-slate-500 ml-1">
+                      <span className="text-base font-normal text-text-muted ml-1">
                         average
                       </span>
                     </p>
                   </div>
                   <div className="flex gap-3 text-xs font-medium">
                     <div className="flex items-center gap-1.5">
-                      <div className="w-2 h-2 rounded-full bg-slate-700"></div>
-                      <span className="text-slate-500">Avg</span>
+                      <div className="w-2 h-2 rounded-full bg-border"></div>
+                      <span className="text-text-muted">Avg</span>
                     </div>
                     <div className="flex items-center gap-1.5">
-                      {/* Changed to Blue */}
-                      <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                      <span className="text-blue-300">Evoc</span>
+                      <div className="w-2 h-2 rounded-full bg-primary"></div>
+                      <span className="text-primary-hover">Evoc</span>
                     </div>
                   </div>
                 </div>
@@ -73,64 +70,63 @@ const Results: React.FC = () => {
                           x2="0"
                           y2="1"
                         >
-                          {/* Changed stop color to Blue-500 hex */}
                           <stop
                             offset="5%"
-                            stopColor="#3b82f6"
-                            stopOpacity={0.4}
+                            stopColor="#3B82F6"
+                            stopOpacity={0.2}
                           />
                           <stop
                             offset="95%"
-                            stopColor="#3b82f6"
+                            stopColor="#3B82F6"
                             stopOpacity={0}
                           />
                         </linearGradient>
                       </defs>
                       <CartesianGrid
                         strokeDasharray="3 3"
-                        stroke="#1e293b"
+                        stroke="#27272A"
                         vertical={false}
-                        opacity={0.5}
                       />
                       <XAxis
                         dataKey="name"
-                        stroke="#475569"
+                        stroke="#71717A"
                         axisLine={false}
                         tickLine={false}
                         tick={{ fontSize: 12 }}
+                        dy={10}
                       />
                       <YAxis
-                        stroke="#475569"
+                        stroke="#71717A"
                         axisLine={false}
                         tickLine={false}
                         tick={{ fontSize: 12 }}
                       />
                       <Tooltip
                         contentStyle={{
-                          backgroundColor: "#020617",
-                          borderColor: "#1e293b",
+                          backgroundColor: "#0A0A0A",
+                          borderColor: "#27272A",
                           borderRadius: "8px",
-                          boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
+                          boxShadow: "0 4px 12px rgba(0,0,0,0.5)",
+                          color: "#fff",
                         }}
                         itemStyle={{ color: "#fff" }}
-                        cursor={{ stroke: "#3b82f6", strokeWidth: 1 }} // Blue cursor
+                        cursor={{ stroke: "#3B82F6", strokeWidth: 1 }}
                       />
                       <Area
                         type="monotone"
                         dataKey="prev"
-                        stroke="#334155"
+                        stroke="#52525B"
                         fill="transparent"
                         strokeDasharray="4 4"
                         strokeWidth={2}
                       />
-                      {/* Changed stroke to Blue-500 hex */}
                       <Area
                         type="monotone"
                         dataKey="current"
-                        stroke="#3b82f6"
+                        stroke="#3B82F6"
                         fillOpacity={1}
                         fill="url(#colorCurrent)"
-                        strokeWidth={3}
+                        strokeWidth={2}
                       />
                     </AreaChart>
                   </ResponsiveContainer>
@@ -146,12 +142,11 @@ const Results: React.FC = () => {
             transition={{ duration: 0.7 }}
             className="order-1 lg:order-2"
           >
-            <h2 className="text-3xl md:text-5xl font-display font-bold mb-6">
-              Visual Reports & <br />
-              {/* Changed text color to Blue-400 */}
-              <span className="text-blue-400">Real-Time Insights</span>
-            </h2>
-            <p className="text-slate-400 text-lg mb-8 leading-relaxed">
+            <BlurText
+              text="Visual Reports & Real-Time Insights"
+              className="text-3xl md:text-5xl font-semibold mb-6 text-text-main leading-tight"
+            />
+            <p className="text-text-muted text-lg mb-8 leading-relaxed">
               We don't send you confusing spreadsheets. You get access to a live
               dashboard showing exactly where every rupee is going and what it's
               bringing back.
@@ -170,12 +165,11 @@ const Results: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: 0.1 * i + 0.5 }}
-                  className="flex items-center gap-3 text-slate-200"
+                  className="flex items-center gap-3 text-text-main"
                 >
-                  {/* Changed bg, border, and icon color to Blue */}
-                  <div className="w-6 h-6 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
+                  <div className="w-5 h-5 rounded-full bg-primary/10 flex items-center justify-center border border-primary/20">
                     <svg
-                      className="w-3 h-3 text-blue-400"
+                      className="w-3 h-3 text-primary"
                       fill="none"
                       viewBox="0 0 24 24"
                       stroke="currentColor"

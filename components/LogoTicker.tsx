@@ -13,7 +13,7 @@ const LogoTicker: React.FC = () => {
   ];
 
   return (
-    <div className="py-10 border-y border-white/5 bg-[#05050A]">
+    <div className="py-10 border-y border-border bg-background">
       <div className="max-w-7xl mx-auto px-6 mb-6 text-center">
         <p className="text-sm text-slate-500 font-medium tracking-wider uppercase">
           OFFICIAL BUISNESS PARTNERS

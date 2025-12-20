@@ -12,7 +12,6 @@ import Footer from "./components/Footer";
 import Cursor from "./components/Cursor";
 import LoadingScreen from "./components/LoadingScreen";
 import Contact from "./components/Contact";
-import VideoSection from "./components/VideoSection";
 import MarketingProfitPages from "./components/MarketingProfitPage";
 import LogoTicker from "./components/LogoTicker";
 import Process from "./components/Process";
@@ -21,7 +20,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   return (
-    <div className="bg-slate-950 min-h-screen text-white font-sans selection:bg-brand-500/30 selection:text-brand-200">
+    <div className="bg-background min-h-screen text-text-main font-sans selection:bg-primary/30 selection:text-primary-hover">
       <AnimatePresence mode="wait">
         {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
       </AnimatePresence>
@@ -32,7 +31,6 @@ function App() {
           <Navbar />
           <main>
             <Hero />
-            <VideoSection />
             <MarketingProfitPages />
             <LogoTicker />
             <Process />

@@ -28,7 +28,7 @@ const Cursor: React.FC = () => {
 
   return (
     <motion.div
-      className="fixed top-0 left-0 w-4 h-4 bg-brand-400 rounded-full pointer-events-none z-[9999] mix-blend-screen opacity-80 shadow-[0_0_10px_rgba(56,189,248,0.5)]"
+      className="fixed top-0 left-0 w-3 h-3 bg-white rounded-full pointer-events-none z-[9999]"
       style={{
         x: cursorXSpring,
         y: cursorYSpring,

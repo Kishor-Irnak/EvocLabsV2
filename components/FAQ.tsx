@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Minus } from 'lucide-react';
 import { FaqItem } from '../types';
 import { motion, AnimatePresence } from 'framer-motion';
+import BlurText from "./BlurText";
 
 const faqs: FaqItem[] = [
   { 
@@ -26,26 +27,20 @@ const FAQ: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-24 bg-slate-950 relative">
+    <section className="py-24 bg-background relative">
       <div className="max-w-4xl mx-auto px-6">
         <div className="text-center mb-16">
-          <motion.h2 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-3xl md:text-5xl font-display font-bold mb-4"
-          >
-            Common Questions
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="text-slate-400"
-          >
-            Everything you need to know about working with us.
-          </motion.p>
+            <BlurText
+               text="Common Questions"
+               className="text-3xl md:text-5xl font-semibold mb-4 text-text-main tracking-tight"
+            />
+          <div className="mt-4">
+          <BlurText
+             text="Everything you need to know about working with us."
+             className="text-text-muted inline-block"
+             delay={0.2}
+          />
+          </div>
         </div>
 
         <div className="space-y-4">
@@ -56,16 +51,16 @@ const FAQ: React.FC = () => {
               viewport={{ once: true }}
               transition={{ delay: 0.1 * index }}
               key={index} 
-              className={`border rounded-xl transition-all duration-300 ${openIndex === index ? 'bg-slate-900/80 border-brand-500/50 shadow-[0_0_15px_rgba(14,165,233,0.1)]' : 'bg-transparent border-white/10 hover:border-white/20'}`}
+              className={`border rounded-lg transition-all duration-300 ${openIndex === index ? 'bg-surface border-border' : 'bg-transparent border-transparent hover:bg-surface/50'}`}
             >
               <button 
                 className="w-full flex items-center justify-between p-6 text-left"
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
               >
-                <span className={`font-medium text-lg ${openIndex === index ? 'text-white' : 'text-slate-300'}`}>
+                <span className={`font-medium text-lg ${openIndex === index ? 'text-text-main' : 'text-text-secondary'}`}>
                   {faq.question}
                 </span>
-                {openIndex === index ? <Minus className="text-brand-400 w-5 h-5" /> : <Plus className="text-slate-500 w-5 h-5" />}
+                {openIndex === index ? <Minus className="text-text-secondary w-5 h-5" /> : <Plus className="text-text-muted w-5 h-5" />}
               </button>
               
               <AnimatePresence>
@@ -76,7 +71,7 @@ const FAQ: React.FC = () => {
                     exit={{ height: 0, opacity: 0 }}
                     className="overflow-hidden"
                   >
-                    <div className="p-6 pt-0 text-slate-400 leading-relaxed">
+                    <div className="p-6 pt-0 text-text-muted leading-relaxed">
                       {faq.answer}
                     </div>
                   </motion.div>
