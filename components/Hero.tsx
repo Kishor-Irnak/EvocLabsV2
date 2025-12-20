@@ -24,6 +24,8 @@ const Hero = () => {
             background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.9) 15%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.9) 85%, transparent 100%)",
             boxShadow: "0 0 50px 10px rgba(255, 255, 255, 0.7), 0 0 100px 20px rgba(59, 130, 246, 0.4)",
             filter: "blur(0.5px)",
+            maskImage: "linear-gradient(to bottom, black 0%, black 50%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 50%, transparent 100%)",
           }}
           animate={{
             left: ["-10%", "110%"],
@@ -43,6 +45,8 @@ const Hero = () => {
             background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.7) 20%, rgba(191, 219, 254, 0.8) 50%, rgba(255, 255, 255, 0.7) 80%, transparent 100%)",
             boxShadow: "0 0 40px 8px rgba(255, 255, 255, 0.6), 0 0 80px 16px rgba(96, 165, 250, 0.3)",
             filter: "blur(1px)",
+            maskImage: "linear-gradient(to bottom, black 0%, black 45%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 45%, transparent 100%)",
           }}
           animate={{
             left: ["-10%", "110%"],
@@ -63,6 +67,8 @@ const Hero = () => {
             background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.5) 25%, rgba(147, 197, 253, 0.6) 50%, rgba(255, 255, 255, 0.5) 75%, transparent 100%)",
             boxShadow: "0 0 30px 6px rgba(255, 255, 255, 0.5), 0 0 60px 12px rgba(147, 197, 253, 0.25)",
             filter: "blur(1.5px)",
+            maskImage: "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 55%, transparent 100%)",
           }}
           animate={{
             left: ["-10%", "110%"],
@@ -83,6 +89,8 @@ const Hero = () => {
             background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.8) 20%, rgba(255, 255, 255, 0.95) 50%, rgba(255, 255, 255, 0.8) 80%, transparent 100%)",
             boxShadow: "0 0 45px 9px rgba(255, 255, 255, 0.65), 0 0 90px 18px rgba(59, 130, 246, 0.35)",
             filter: "blur(0.8px)",
+            maskImage: "linear-gradient(to bottom, black 0%, black 40%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 40%, transparent 100%)",
           }}
           animate={{
             left: ["-10%", "110%"],
@@ -102,6 +110,8 @@ const Hero = () => {
             background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.6) 30%, rgba(191, 219, 254, 0.7) 50%, rgba(255, 255, 255, 0.6) 70%, transparent 100%)",
             boxShadow: "0 0 35px 7px rgba(255, 255, 255, 0.55), 0 0 70px 14px rgba(191, 219, 254, 0.3)",
             filter: "blur(1.2px)",
+            maskImage: "linear-gradient(to bottom, black 0%, black 48%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 48%, transparent 100%)",
           }}
           animate={{
             left: ["-10%", "110%"],
@@ -122,6 +132,8 @@ const Hero = () => {
             background: "linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.75) 25%, rgba(255, 255, 255, 0.9) 50%, rgba(255, 255, 255, 0.75) 75%, transparent 100%)",
             boxShadow: "0 0 40px 8px rgba(255, 255, 255, 0.6), 0 0 80px 16px rgba(255, 255, 255, 0.3)",
             filter: "blur(1px)",
+            maskImage: "linear-gradient(to bottom, black 0%, black 52%, transparent 100%)",
+            WebkitMaskImage: "linear-gradient(to bottom, black 0%, black 52%, transparent 100%)",
           }}
           animate={{
             left: ["-10%", "110%"],
