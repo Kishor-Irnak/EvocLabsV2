@@ -6,7 +6,7 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, ".", "");
 
   return {
-    base: "/EvocLabs/", // ✅ Correct for GitHub Pages
+    base: "/", // ✅ REQUIRED for custom domain
 
     server: {
       port: 3000,
