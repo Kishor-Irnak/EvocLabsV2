@@ -203,7 +203,13 @@ const Hero = () => {
           />
 
           {/* Shimmering Title Effect */}
-          <div className="relative inline-block px-6 py-2">
+          <motion.div
+            initial={{ opacity: 0, filter: "blur(15px)", y: 20 }}
+            whileInView={{ opacity: 1, filter: "blur(0px)", y: 0 }}
+            transition={{ duration: 1, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            className="relative inline-block px-6 py-2"
+          >
             <motion.span
               className="text-4xl p-2 sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight leading-[1.1] block italic text-transparent bg-clip-text"
               style={{
@@ -222,7 +228,7 @@ const Hero = () => {
             >
               Profit Engine
             </motion.span>
-          </div>
+          </motion.div>
         </div>
 
         {/* Subhead */}

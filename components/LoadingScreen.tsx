@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Rocket } from "lucide-react";
 import EvocLogo from "../assets/EvocLab_Logo.png";
 
 const LoadingScreen: React.FC<{ onComplete: () => void }> = ({
@@ -9,44 +8,36 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    // Start animation loop
     if (progress === 0) {
-      // Initial delay before starting
       const timer = setTimeout(() => setProgress(1), 500);
       return () => clearTimeout(timer);
     }
 
     if (progress >= 100) {
-      // Finished
       const timer = setTimeout(onComplete, 800);
       return () => clearTimeout(timer);
     }
 
-    // Calculate next increment and delay based on current progress to simulate realism
     const calculateNextStep = () => {
       let increment = 0;
       let delay = 0;
       const random = Math.random();
 
       if (progress < 30) {
-        // Fast start
         increment = random * 15 + 5;
         delay = random * 200 + 50;
       } else if (progress < 50) {
-        // Simulate "heavy asset" loading (potential stalls)
         if (random > 0.8) {
-          increment = 0.5; // MUST be > 0 to trigger re-render and effect loop
+          increment = 0.5;
           delay = 800;
         } else {
-          increment = random * 5 + 1; // Slow crawl
+          increment = random * 5 + 1;
           delay = random * 500 + 200;
         }
       } else if (progress < 80) {
-        // Rapid burst
         increment = random * 20 + 10;
         delay = random * 150 + 50;
       } else {
-        // Slow finish (90-99%)
         increment = random * 2 + 0.5;
         delay = random * 400 + 100;
       }
@@ -65,65 +56,113 @@ const LoadingScreen: React.FC<{ onComplete: () => void }> = ({
 
   return (
     <motion.div
-      className="fixed inset-0 z-[1000] bg-[#020617] flex flex-col items-center justify-center overflow-hidden"
+      className="fixed inset-0 z-[1000] bg-black flex flex-col items-center justify-center overflow-hidden"
       exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
     >
-      {/* Background ambient glow */}
-      <div className="absolute inset-0 bg-brand-900/10 blur-[100px] rounded-full pointer-events-none transform scale-150 animate-pulse-slow"></div>
+      {/* Dynamic Ambient Background */}
+      <div className="absolute inset-0 bg-blue-950/10 pointer-events-none" />
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0.1, 0.2, 0.1],
+        }}
+        transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
+        className="absolute w-[800px] h-[800px] bg-blue-600/10 blur-[150px] rounded-full pointer-events-none"
+      />
 
-      <div className="relative z-10 w-full max-w-md px-10 text-center">
-        {/* Logo Animation */}
+      <div className="relative z-10 w-full max-w-sm px-8 text-center">
+        {/* Premium Logo Container */}
         <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
+          initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5 }}
-          className="mb-6 flex justify-center"
+          transition={{ duration: 0.8 }}
+          className="mb-12 flex justify-center relative"
         >
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-brand-600 to-brand-400 flex items-center justify-center shadow-2xl shadow-brand-500/20">
-            <img src={EvocLogo} alt="Evoc Labs Logo" className="w-12 h-12" />
+          {/* Subtle logo pulse glow */}
+          <motion.div
+            animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.6, 0.3] }}
+            transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+            className="absolute inset-0 bg-blue-500/20 blur-2xl rounded-full"
+          />
+
+          <div className="w-24 h-24 rounded-3xl bg-neutral-900/50 backdrop-blur-xl border border-white/10 flex items-center justify-center shadow-2xl relative overflow-hidden">
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 to-transparent pr-2 pt-2" />
+            <img
+              src={EvocLogo}
+              alt="Evoc Labs Logo"
+              className="w-16 h-16 p-2 relative z-10"
+            />
           </div>
         </motion.div>
 
-        {/* Text */}
-        <motion.h2
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="text-2xl font-display font-bold text-white mb-2"
-        >
-          Evoc Labs
-        </motion.h2>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.5 }}
-          className="text-sm text-slate-400 mb-8 uppercase tracking-[0.2em]"
-        >
-          Initializing Profit Engine
-        </motion.p>
+        {/* Text Styling */}
+        <div className="mb-10 space-y-3">
+          <motion.h2
+            initial={{ y: 10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="text-3xl font-bold tracking-tight text-white"
+          >
+            Evoc Labs
+          </motion.h2>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex items-center justify-center gap-2"
+          >
+            <div className="h-[1px] w-4 bg-blue-500/50" />
+            <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-blue-400">
+              Initializing Profit Engine
+            </span>
+            <div className="h-[1px] w-4 bg-blue-500/50" />
+          </motion.div>
+        </div>
 
-        {/* Progress Bar Container */}
-        <div className="h-1 w-full bg-slate-800/50 rounded-full overflow-hidden backdrop-blur-sm relative">
-          {/* Animated Bar */}
+        {/* Ultra-Premium Progress Bar */}
+        <div className="relative px-2">
+          <div className="h-[3px] w-full bg-white/5 rounded-full overflow-hidden relative border border-white/5">
+            {/* Progress fill */}
+            <motion.div
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-blue-600 via-blue-400 to-white"
+              initial={{ width: 0 }}
+              animate={{ width: `${progress}%` }}
+              transition={{ type: "tween", ease: "linear", duration: 0.1 }}
+            />
+
+            {/* Shimmer overlay */}
+            <motion.div
+              className="absolute top-0 left-0 h-full w-40 bg-gradient-to-r from-transparent via-white/20 to-transparent"
+              animate={{
+                left: ["-100%", "200%"],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "linear",
+              }}
+            />
+          </div>
+
+          {/* Glowing head of the progress bar */}
           <motion.div
-            className="absolute top-0 left-0 h-full bg-blue-500 shadow-[0_0_10px_rgba(59,130,246,0.5)]"
-            initial={{ width: 0 }}
-            animate={{ width: `${progress}%` }}
-            transition={{ type: "tween", ease: "linear", duration: 0.2 }}
+            className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-blue-400/50 blur-lg rounded-full"
+            style={{ left: `${progress}%`, transform: "translate(-50%, -50%)" }}
+            animate={{ opacity: progress > 0 && progress < 100 ? 1 : 0 }}
           />
-          {/* Glow Head */}
           <motion.div
-            className="absolute top-0 h-full w-20 bg-white/50 blur-[5px]"
-            style={{
-              left: `${progress}%`,
-              transform: "translateX(-50%)",
-              opacity: progress < 100 ? 1 : 0,
-            }}
+            className="absolute top-1/2 -translate-y-1/2 w-1.5 h-1.5 bg-white shadow-[0_0_8px_white] rounded-full z-20"
+            style={{ left: `${progress}%`, transform: "translate(-50%, -50%)" }}
+            animate={{ opacity: progress > 0 && progress < 100 ? 1 : 0 }}
           />
         </div>
 
-        {/* Percentage */}
-        <div className="flex justify-between mt-2 text-xs font-mono text-slate-500">
-          <span>{progress < 100 ? "LOADING ASSETS" : "READY"}</span>
-          <span>{Math.round(progress)}%</span>
+        {/* Status Percentage */}
+        <div className="mt-6 flex justify-between items-center px-2">
+          <span className="text-[9px] font-black text-white/20 tracking-widest uppercase">
+            System Check
+          </span>
+          <span className="text-[10px] font-mono font-bold text-blue-400">
+            {Math.round(progress)}%
+          </span>
         </div>
       </div>
     </motion.div>
