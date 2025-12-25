@@ -22,7 +22,10 @@ const data = [
 
 const Results: React.FC = () => {
   return (
-    <section id="results" className="py-24 relative bg-background border-t border-border/50">
+    <section
+      id="results"
+      className="py-24 relative bg-background border-t border-border"
+    >
       <div className="max-w-7xl mx-auto px-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           {/* Chart Section */}

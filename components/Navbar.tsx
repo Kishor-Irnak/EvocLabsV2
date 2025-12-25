@@ -12,7 +12,7 @@ const Navbar: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       // Determine direction and toggle visibility
       if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
         setIsVisible(false); // Hide on scroll down
@@ -54,7 +54,11 @@ const Navbar: React.FC = () => {
         {/* Logo Section */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded flex items-center justify-center">
-            <img src={EvocLogo} alt="Evoc Labs Logo" className="w-8 h-8 opacity-90" />
+            <img
+              src={EvocLogo}
+              alt="Evoc Labs Logo"
+              className="w-8 h-8 opacity-90"
+            />
           </div>
           <span className="font-semibold text-xl tracking-tight text-text-main">
             Evoc Labs
@@ -63,7 +67,7 @@ const Navbar: React.FC = () => {
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
-          <div className="bg-surface/50 border border-border/50 rounded-full px-2 py-1 flex items-center backdrop-blur-sm shadow-sm">
+          <div className="bg-surface/50 border border-border rounded-full px-2 py-1 flex items-center backdrop-blur-sm shadow-sm">
             {navLinks.map((link) => (
               <a
                 key={link.name}
@@ -75,7 +79,6 @@ const Navbar: React.FC = () => {
             ))}
           </div>
         </div>
-
 
         <div className="hidden md:flex items-center gap-4">
           <a

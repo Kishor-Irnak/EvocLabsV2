@@ -1,13 +1,13 @@
 import React, { useRef } from "react";
 import { Briefcase, Hexagon, Triangle, Circle, Square } from "lucide-react";
-import { 
-  motion, 
-  useScroll, 
-  useSpring, 
-  useTransform, 
-  useMotionValue, 
-  useVelocity, 
-  useAnimationFrame 
+import {
+  motion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useMotionValue,
+  useVelocity,
+  useAnimationFrame,
 } from "framer-motion";
 
 const clients = [
@@ -31,10 +31,10 @@ const wrap = (min: number, max: number, v: number) => {
   return ((((v - min) % rangeSize) + rangeSize) % rangeSize) + min;
 };
 
-const LogoStrip = ({ 
+const LogoStrip = ({
   baseVelocity = 100,
-  className = "" 
-}: { 
+  className = "",
+}: {
   baseVelocity: number;
   className?: string;
 }) => {
@@ -43,10 +43,10 @@ const LogoStrip = ({
   const scrollVelocity = useVelocity(scrollY);
   const smoothVelocity = useSpring(scrollVelocity, {
     damping: 50,
-    stiffness: 400
+    stiffness: 400,
   });
   const velocityFactor = useTransform(smoothVelocity, [0, 1000], [0, 5], {
-    clamp: false
+    clamp: false,
   });
 
   // Wrap at -25% (since we have 4 sets, one set is 25% of width)
@@ -71,22 +71,19 @@ const LogoStrip = ({
 
   return (
     <div className={`flex relative overflow-hidden ${className}`}>
-        <motion.div
-          className="flex gap-8 flex-nowrap"
-          style={{ x }}
-        >
-          {duplicatedClients.map((client, i) => (
-            <div
-              key={i}
-              className="flex items-center gap-3 px-8 py-4 bg-surface/50 border border-border/50 rounded-xl backdrop-blur-sm whitespace-nowrap min-w-[200px]"
-            >
-              <client.icon className="w-5 h-5 text-primary opacity-80" />
-              <span className="font-semibold text-text-main text-lg tracking-tight">
-                {client.name}
-              </span>
-            </div>
-          ))}
-        </motion.div>
+      <motion.div className="flex gap-8 flex-nowrap" style={{ x }}>
+        {duplicatedClients.map((client, i) => (
+          <div
+            key={i}
+            className="flex items-center gap-3 px-8 py-4 bg-surface/50 border border-border rounded-xl backdrop-blur-sm whitespace-nowrap min-w-[200px]"
+          >
+            <client.icon className="w-5 h-5 text-primary opacity-80" />
+            <span className="font-semibold text-text-main text-lg tracking-tight">
+              {client.name}
+            </span>
+          </div>
+        ))}
+      </motion.div>
     </div>
   );
 };
@@ -106,14 +103,14 @@ const Testimonials: React.FC = () => {
 
       {/* 3D Container */}
       <div className="relative w-full max-w-[120vw] -rotate-3 skew-y-3 scale-110 opacity-80 hover:opacity-100 transition-opacity duration-500">
-         {/* Strip 1 - Left */}
-         <LogoStrip baseVelocity={-2} className="mb-6 opacity-60" />
-         
-         {/* Strip 2 (Main) - Right */}
-         <LogoStrip baseVelocity={2} className="mb-6 scale-110 z-10" />
-         
-         {/* Strip 3 - Left */}
-         <LogoStrip baseVelocity={-2} className="opacity-60" />
+        {/* Strip 1 - Left */}
+        <LogoStrip baseVelocity={-2} className="mb-6 opacity-60" />
+
+        {/* Strip 2 (Main) - Right */}
+        <LogoStrip baseVelocity={2} className="mb-6 scale-110 z-10" />
+
+        {/* Strip 3 - Left */}
+        <LogoStrip baseVelocity={-2} className="opacity-60" />
       </div>
     </section>
   );

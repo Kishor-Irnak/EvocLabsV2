@@ -39,12 +39,13 @@ const itemVariants = {
 
 const WhyChooseUs: React.FC = () => {
   return (
-    <section id="why-us" className="h-screen flex items-center bg-background relative overflow-hidden py-0">
-      
+    <section
+      id="why-us"
+      className="h-screen flex items-center bg-background relative overflow-hidden py-0"
+    >
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full h-full flex flex-col justify-center">
         {/* Compact grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          
           {/* --- Left Content (Text) --- */}
           <motion.div
             variants={containerVariants}
@@ -103,7 +104,6 @@ const WhyChooseUs: React.FC = () => {
             className="order-1 lg:order-2 w-full flex items-center justify-center lg:h-auto"
           >
             <div className="relative w-full aspect-square max-w-[450px] lg:max-w-[550px]">
-              
               {/* Ambient Background Glow */}
               <div className="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full opacity-30 pointer-events-none" />
 
@@ -111,7 +111,7 @@ const WhyChooseUs: React.FC = () => {
               <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl ring-1 ring-white/5 group">
                 {/* Overlay gradient */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10 pointer-events-none" />
-                
+
                 <video
                   className="w-full h-full object-cover transition-opacity duration-700 opacity-100"
                   autoPlay
@@ -123,7 +123,6 @@ const WhyChooseUs: React.FC = () => {
               </div>
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>

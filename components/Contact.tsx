@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { Mail, Clock, Video, ArrowRight, CheckCircle, Sparkles } from "lucide-react";
+import {
+  Mail,
+  Clock,
+  Video,
+  ArrowRight,
+  CheckCircle,
+  Sparkles,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import BlurText from "./BlurText";
 
@@ -14,10 +21,9 @@ const Contact: React.FC = () => {
     >
       {/* Optional: Subtle Background Gradient Blob for Premium feel */}
       <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none" />
-      
+
       <div className="w-full max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
-          
           {/* Left Column: Content */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -52,24 +58,24 @@ const Contact: React.FC = () => {
             <div className="p-6 md:p-8 rounded-2xl border border-border bg-surface/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-start justify-between mb-4">
                 <div>
-                    <h4 className="text-lg font-semibold text-text-main">
-                        Book a Strategy Call
-                    </h4>
-                    <p className="text-text-muted text-sm mt-1">
-                        30-min discovery session with a strategist.
-                    </p>
+                  <h4 className="text-lg font-semibold text-text-main">
+                    Book a Strategy Call
+                  </h4>
+                  <p className="text-text-muted text-sm mt-1">
+                    30-min discovery session with a strategist.
+                  </p>
                 </div>
                 <div className="bg-primary/10 p-2 rounded-lg">
-                    <Sparkles className="w-5 h-5 text-primary" />
+                  <Sparkles className="w-5 h-5 text-primary" />
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center gap-2 text-text-main text-sm bg-background px-3 py-1.5 rounded-md border border-border/50">
+                <div className="flex items-center gap-2 text-text-main text-sm bg-background px-3 py-1.5 rounded-md border border-border">
                   <Clock className="w-4 h-4 text-primary" />
                   <span>30 Minutes</span>
                 </div>
-                <div className="flex items-center gap-2 text-text-main text-sm bg-background px-3 py-1.5 rounded-md border border-border/50">
+                <div className="flex items-center gap-2 text-text-main text-sm bg-background px-3 py-1.5 rounded-md border border-border">
                   <Video className="w-4 h-4 text-primary" />
                   <span>Google Meet</span>
                 </div>
@@ -108,8 +114,16 @@ const Contact: React.FC = () => {
                   onSubmit={() => setIsSubmitted(true)}
                 >
                   <input type="hidden" name="_captcha" value="false" />
-                  <input type="hidden" name="_subject" value="New Contact Request - EvocLabs" />
-                  <input type="hidden" name="_next" value="https://evoclabs.com/success" />
+                  <input
+                    type="hidden"
+                    name="_subject"
+                    value="New Contact Request - EvocLabs"
+                  />
+                  <input
+                    type="hidden"
+                    name="_next"
+                    value="https://evoclabs.com/success"
+                  />
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {/* Name */}
@@ -164,14 +178,28 @@ const Contact: React.FC = () => {
                           name="budget"
                           className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
                         >
-                          <option value="" className="text-text-muted">Select Range</option>
+                          <option value="" className="text-text-muted">
+                            Select Range
+                          </option>
                           <option value="<5k">Less than $5k</option>
                           <option value="5k-20k">$5k – $20k</option>
                           <option value="20k-50k">$20k – $50k</option>
                           <option value="50k+">$50k+</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
-                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                          <svg
+                            className="w-4 h-4"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 9l-7 7-7-7"
+                            ></path>
+                          </svg>
                         </div>
                       </div>
                     </div>
@@ -195,7 +223,7 @@ const Contact: React.FC = () => {
                     type="submit"
                     className="group w-full bg-text-main hover:bg-text-secondary text-border font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98]"
                   >
-                    Send Request 
+                    Send Request
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
 
@@ -215,10 +243,11 @@ const Contact: React.FC = () => {
 
                   <h3 className="text-2xl font-bold text-text-main mb-2">
                     Request Received!
-                  </h3 >
+                  </h3>
 
                   <p className="text-text-muted max-w-[250px] mx-auto mb-8">
-                    Thanks! We've received your details and will be in touch shortly.
+                    Thanks! We've received your details and will be in touch
+                    shortly.
                   </p>
 
                   <button
@@ -231,7 +260,6 @@ const Contact: React.FC = () => {
               )}
             </div>
           </motion.div>
-
         </div>
       </div>
     </section>
