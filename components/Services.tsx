@@ -1,67 +1,87 @@
 import React from "react";
-import {
-  Target,
-  Search,
-  ShoppingBag,
-  BarChart3,
-  Users,
-  Zap,
-  Layers,
-} from "lucide-react";
+import { Layers, Quote } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import BlurText from "./BlurText";
 
 // --- Types ---
-interface ServiceItem {
+interface ReviewItem {
   id: string;
-  title: string;
-  description: string;
-  icon: React.ElementType;
+  quote: string;
+  name: string;
+  designation: string;
 }
 
 // --- Data ---
-const services: ServiceItem[] = [
+const reviews: ReviewItem[] = [
   {
     id: "1",
-    title: "Performance Marketing",
-    description:
-      "Data-led media buying across major platforms to drive consistent ROAS.",
-    icon: Target,
+    quote:
+      "Evoc Labz completely changed how we scale. No fixed cost, no stress. We finally see real profits instead of just revenue.",
+    name: "Rohit Verma",
+    designation: "Founder, D2C Brand",
   },
   {
     id: "2",
-    title: "Meta & Google Ads",
-    description:
-      "Expert campaign management optimized for lower CAC and higher conversions.",
-    icon: Search,
+    quote:
+      "What I liked most is the transparency. Every order, every rupee is visible on one dashboard.",
+    name: "Ankit Sharma",
+    designation: "Co-Founder, Shopify Store",
   },
   {
     id: "3",
-    title: "E-com Development",
-    description:
-      "High-conversion Shopify & Woo stores built for speed and sales.",
-    icon: ShoppingBag,
+    quote:
+      "RTO was killing our margins earlier. After using Evoc Labz, our delivered order quality improved massively.",
+    name: "Sandeep Patel",
+    designation: "Founder, Ecommerce Brand",
   },
   {
     id: "4",
-    title: "SEO & Organic Growth",
-    description:
-      "Dominate search results with technical SEO and content strategy.",
-    icon: BarChart3,
+    quote:
+      "Paying only on delivered orders makes complete sense. Evoc Labz feels more like a partner than a service provider.",
+    name: "Amit Gupta",
+    designation: "Brand Owner",
   },
   {
     id: "5",
-    title: "Lead Generation",
-    description:
-      "High-intent B2B and B2C lead pipelines that fuel your sales team.",
-    icon: Users,
+    quote:
+      "We stopped wasting money on multiple tools. Everything is now managed from a single platform.",
+    name: "Neha Agarwal",
+    designation: "Founder, Lifestyle Brand",
   },
   {
     id: "6",
-    title: "UGC & Content",
-    description:
-      "Authentic creative assets that resonate and convert cold traffic.",
-    icon: Zap,
+    quote:
+      "Finally a system that focuses on profit, not just ROAS screenshots. Evoc Labz shows the real picture.",
+    name: "Vikas Mehta",
+    designation: "D2C Entrepreneur",
+  },
+  {
+    id: "7",
+    quote:
+      "The onboarding was smooth and the team actually understands Indian ecommerce problems like COD and RTO.",
+    name: "Rahul Singh",
+    designation: "Online Seller",
+  },
+  {
+    id: "8",
+    quote:
+      "Our operations became more structured within weeks. Less chaos, better decisions.",
+    name: "Pooja Malhotra",
+    designation: "Operations Head",
+  },
+  {
+    id: "9",
+    quote:
+      "Evoc Labz helped us scale without hiring a big internal team. That saved us a lot of cost.",
+    name: "Karan Jain",
+    designation: "Founder, Growing D2C Brand",
+  },
+  {
+    id: "10",
+    quote:
+      "This is not another agency or software. It’s a complete growth system built for real ecommerce.",
+    name: "Nikhil Bansal",
+    designation: "Brand Founder",
   },
 ];
 
@@ -93,10 +113,7 @@ const badgeVariants: Variants = {
 
 const Services: React.FC = () => {
   return (
-    <section
-      id="services"
-      className="py-24 md:py-32 bg-background relative"
-    >
+    <section id="services" className="py-24 md:py-32 bg-background relative">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         {/* --- Header Section --- */}
         <div className="mb-20">
@@ -108,7 +125,7 @@ const Services: React.FC = () => {
             className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-surface border border-border text-text-secondary text-xs font-medium uppercase tracking-wider mb-6"
           >
             <Layers className="w-3 h-3" />
-            Our Expertise
+            Client Reviews
           </motion.div>
 
           <div className="max-w-3xl">
@@ -122,10 +139,10 @@ const Services: React.FC = () => {
         {/* --- Grid Layout --- */}
         {/* --- Carousel Layout --- */}
         <div className="relative w-full overflow-hidden mask-gradient-sides">
-           {/* Add a gradient mask for smooth fade in/out at edges if supported, usually requires simple mask-image in css or just gradients overlay */}
-           {/* Gradient Overlays for Fade Effect */}
-           <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
-           <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
+          {/* Add a gradient mask for smooth fade in/out at edges if supported, usually requires simple mask-image in css or just gradients overlay */}
+          {/* Gradient Overlays for Fade Effect */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-20 pointer-events-none" />
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-20 pointer-events-none" />
 
           <motion.div
             className="flex gap-6 w-max"
@@ -137,24 +154,30 @@ const Services: React.FC = () => {
             }}
           >
             {/* Render items twice for seamless loop */}
-            {[...services, ...services].map((service, index) => (
+            {[...reviews, ...reviews].map((review, index) => (
               <div
-                key={`${service.id}-${index}`}
-                className="w-[300px] md:w-[350px] flex-shrink-0 group relative p-8 rounded-xl bg-surface border border-border hover:border-primary/50 transition-colors duration-300"
+                key={`${review.id}-${index}`}
+                className="w-[300px] md:w-[350px] flex-shrink-0 group relative p-8 rounded-xl bg-surface border border-border hover:border-primary/50 transition-colors duration-300 flex flex-col justify-between"
               >
                 <div className="relative z-10">
                   {/* Icon Container */}
                   <div className="w-12 h-12 rounded-lg bg-background border border-border flex items-center justify-center mb-6 text-text-secondary group-hover:text-primary transition-colors">
-                    <service.icon strokeWidth={1.5} className="w-6 h-6" />
+                    <Quote strokeWidth={1.5} className="w-6 h-6" />
                   </div>
 
                   {/* Content */}
-                  <h4 className="text-lg font-semibold mb-3 text-text-main">
-                    {service.title}
-                  </h4>
-                  <p className="text-text-muted leading-relaxed text-sm md:text-base">
-                    {service.description}
+                  <p className="text-text-muted leading-relaxed text-sm md:text-base mb-6 italic">
+                    &quot;{review.quote}&quot;
                   </p>
+
+                  <div>
+                    <h4 className="text-lg font-semibold text-text-main">
+                      {review.name}
+                    </h4>
+                    <p className="text-xs text-text-secondary uppercase tracking-wide font-medium">
+                      {review.designation}
+                    </p>
+                  </div>
                 </div>
               </div>
             ))}

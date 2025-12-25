@@ -75,7 +75,7 @@ const LogoStrip = ({
         {duplicatedClients.map((client, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 px-8 py-4 bg-surface/50 border border-border rounded-xl backdrop-blur-sm whitespace-nowrap min-w-[200px]"
+            className="flex items-center gap-3 px-8 py-4 bg-surface/50  rounded-xl backdrop-blur-sm whitespace-nowrap min-w-[200px]"
           >
             <client.icon className="w-5 h-5 text-primary opacity-80" />
             <span className="font-semibold text-text-main text-lg tracking-tight">
