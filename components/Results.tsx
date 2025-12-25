@@ -34,7 +34,7 @@ const Results: React.FC = () => {
               transition={{ duration: 0.7 }}
               className="relative pl-0 md:pl-4"
             >
-              <div className="relative p-6 rounded-xl border border-border bg-surface">
+              <div className="relative p-6 rounded-xl  bg-surface">
                 <div className="flex justify-between items-center mb-8 px-2">
                   <div>
                     <h3 className="text-text-secondary text-xs uppercase tracking-widest font-medium mb-1">

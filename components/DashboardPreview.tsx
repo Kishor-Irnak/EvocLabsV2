@@ -49,7 +49,7 @@ const SidebarItem = ({
         : "text-text-secondary hover:bg-white/5 hover:text-text-main"
     }`}
   >
-    <Icon size={20} />
+    <Icon size={16} className="md:w-5 md:h-5" />
   </div>
 );
 
@@ -64,24 +64,35 @@ const StatCard = ({
   change: string;
   isPositive: boolean;
 }) => (
-  <div className="p-4 rounded-xl border border-border bg-surface flex flex-col justify-between hover:border-border transition-colors group">
-    <div className="flex justify-between items-start mb-2">
-      <span className="text-sm text-text-muted font-medium">{title}</span>
-      <button className="text-text-muted hover:text-text-main">
+  <div className="p-3 md:p-4 rounded-xl border border-border bg-surface flex flex-col justify-between hover:border-border transition-colors group">
+    <div className="flex justify-between items-start mb-1 md:mb-2">
+      <span className="text-[10px] md:text-sm text-text-muted font-medium truncate">
+        {title}
+      </span>
+      <button className="text-text-muted hover:text-text-main hidden md:block">
         <MoreHorizontal size={16} />
       </button>
     </div>
     <div>
-      <div className="text-2xl font-bold text-text-main tracking-tight mb-1 group-hover:text-primary transition-colors">
+      <div className="text-sm md:text-2xl font-bold text-text-main tracking-tight mb-0.5 md:mb-1 transition-colors">
         {value}
       </div>
       <div
-        className={`flex items-center gap-1 text-xs font-medium ${
+        className={`flex items-center gap-1 text-[9px] md:text-xs font-medium ${
           isPositive ? "text-emerald-500" : "text-rose-500"
         }`}
       >
-        {isPositive ? <ArrowUpRight size={14} /> : <ArrowDownRight size={14} />}
-        {change} assigned
+        {isPositive ? (
+          <ArrowUpRight size={10} className="md:hidden" />
+        ) : (
+          <ArrowDownRight size={10} className="md:hidden" />
+        )}
+        {isPositive ? (
+          <ArrowUpRight size={14} className="hidden md:block" />
+        ) : (
+          <ArrowDownRight size={14} className="hidden md:block" />
+        )}
+        {change}
       </div>
     </div>
   </div>
@@ -89,10 +100,11 @@ const StatCard = ({
 
 const DashboardPreview: React.FC = () => {
   return (
-    <div className="w-full h-auto min-h-[500px] md:min-h-0 md:h-auto md:aspect-[16/10] bg-[#0A0A0A] relative flex overflow-hidden rounded-xl border border-white/10 shadow-2xl">
-      {/* Sidebar - Minimized */}
-      <div className="w-16 border-r border-white/5 flex flex-col items-center py-6 gap-4 bg-[#0A0A0A] z-20">
-        <div className="w-6 h-6  mb-4 flex items-center justify-center overflow-hidden">
+    // Removed min-h-[500px] and used aspect ratio for mobile compact view
+    <div className="w-full h-auto aspect-[16/12] md:aspect-[16/10] bg-[#0A0A0A] relative flex overflow-hidden rounded-xl border border-white/10 shadow-2xl">
+      {/* Sidebar - Minimized & Scaled down on mobile */}
+      <div className="w-10 md:w-16 border-r border-white/5 flex flex-col items-center py-4 md:py-6 gap-2 md:gap-4 bg-[#0A0A0A] z-20">
+        <div className="w-5 h-5 md:w-6 md:h-6 mb-2 md:mb-4 flex items-center justify-center overflow-hidden">
           <img src={logo} alt="Logo" className="w-full h-full object-cover" />
         </div>
         <SidebarItem icon={Home} />
@@ -100,7 +112,7 @@ const DashboardPreview: React.FC = () => {
         <SidebarItem icon={Users} />
         <SidebarItem icon={Settings} />
         <div className="mt-auto">
-          <div className="w-8 h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30" />
+          <div className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-indigo-500/20 border border-indigo-500/30" />
         </div>
       </div>
 
@@ -110,74 +122,71 @@ const DashboardPreview: React.FC = () => {
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-[0.03] pointer-events-none" />
 
         {/* Header */}
-        <div className="h-16 border-b border-white/5 flex items-center justify-between px-6 z-10 bg-[#050505]/80 backdrop-blur-sm">
-          <div className="flex items-center gap-2 text-sm text-text-secondary">
+        <div className="h-10 md:h-16 border-b border-white/5 flex items-center justify-between px-3 md:px-6 z-10 bg-[#050505]/80 backdrop-blur-sm">
+          <div className="flex items-center gap-2 text-[10px] md:text-sm text-text-secondary">
             <span className="text-text-main font-medium">Analytics</span>
             <span className="text-white/20">/</span>
             <span>Overview</span>
           </div>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/5 text-xs text-text-muted hover:border-white/10 transition-colors cursor-text w-48">
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-md bg-white/5 border border-white/5 text-xs text-text-muted hover:border-white/10 transition-colors cursor-text w-48">
               <Search size={14} />
               <span>Search...</span>
             </div>
             <Bell
-              size={18}
-              className="text-text-secondary hover:text-text-main cursor-pointer"
+              size={14}
+              className="text-text-secondary hover:text-text-main cursor-pointer md:w-[18px] md:h-[18px]"
             />
           </div>
         </div>
 
         {/* Dashboard Grid */}
-        <div className="p-6 md:p-8 space-y-6 overflow-y-auto no-scrollbar z-10">
-          {/* Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="p-3 md:p-8 space-y-3 md:space-y-6 overflow-y-auto no-scrollbar z-10">
+          {/* Stats Row - Forces 3 columns on mobile too */}
+          <div className="grid grid-cols-3 gap-2 md:gap-4">
             <StatCard
               title="Total Revenue"
-              value="₹128,450.00"
-              change="+12.5%"
+              value="₹128k"
+              change="+12%"
               isPositive={true}
             />
             <StatCard
               title="Active Users"
               value="24.5k"
-              change="+5.2%"
+              change="+5%"
               isPositive={true}
             />
             <StatCard
               title="Bounce Rate"
-              value="42.3%"
-              change="-2.1%"
+              value="42%"
+              change="-2%"
               isPositive={false}
             />
           </div>
 
           {/* Main Chart Area */}
-          <div className="flex-1 rounded-xl border border-white/5 bg-[#0A0A0A] p-6 relative overflow-hidden group">
-            <div className="flex justify-between items-center mb-6">
+          <div className="flex-1 rounded-xl border border-white/5 bg-[#0A0A0A] p-3 md:p-6 relative overflow-hidden group">
+            <div className="flex justify-between items-center mb-3 md:mb-6">
               <div>
-                <h3 className="text-text-main font-semibold text-sm">
+                <h3 className="text-text-main font-semibold text-xs md:text-sm">
                   Revenue Growth
                 </h3>
-                <p className="text-text-muted text-xs mt-1">
-                  Monthly recurring revenue (MRR)
+                <p className="text-text-muted text-[10px] md:text-xs mt-0.5 md:mt-1">
+                  Monthly MRR
                 </p>
               </div>
               <div className="flex bg-white/5 rounded-lg p-0.5 border border-white/5">
-                <button className="px-3 py-1 rounded-md text-xs font-medium bg-white/10 text-white shadow-sm">
+                <button className="px-2 py-0.5 md:px-3 md:py-1 rounded-md text-[9px] md:text-xs font-medium bg-white/10 text-white shadow-sm">
                   12M
                 </button>
-                <button className="px-3 py-1 rounded-md text-xs font-medium text-text-muted hover:text-text-main">
+                <button className="px-2 py-0.5 md:px-3 md:py-1 rounded-md text-[9px] md:text-xs font-medium text-text-muted hover:text-text-main">
                   30D
-                </button>
-                <button className="px-3 py-1 rounded-md text-xs font-medium text-text-muted hover:text-text-main">
-                  7D
                 </button>
               </div>
             </div>
 
             {/* Recharts Area Chart */}
-            <div className="w-full h-[250px] md:h-[300px]">
+            <div className="w-full h-[150px] md:h-[300px]">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart
                   data={data}
@@ -198,13 +207,15 @@ const DashboardPreview: React.FC = () => {
                     dataKey="name"
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "#52525b", fontSize: 11 }}
+                    tick={{ fill: "#52525b", fontSize: 10 }}
                     dy={10}
+                    interval="preserveStartEnd"
                   />
                   <YAxis
                     axisLine={false}
                     tickLine={false}
-                    tick={{ fill: "#52525b", fontSize: 11 }}
+                    tick={{ fill: "#52525b", fontSize: 10 }}
+                    width={30}
                   />
                   <Tooltip
                     contentStyle={{

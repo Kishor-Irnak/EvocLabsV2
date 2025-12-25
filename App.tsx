@@ -16,10 +16,11 @@ import LogoTicker from "./components/LogoTicker";
 import Process from "./components/Process";
 
 import Careers from "./components/Careers";
+import ComingSoon from "./components/ComingSoon";
 
 function App() {
   const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<"home" | "careers">("home");
+  const [view, setView] = useState<"home" | "careers" | "login">("home");
 
   return (
     <div className="bg-background min-h-screen text-text-main font-sans selection:bg-primary/30 selection:text-primary-hover">
@@ -37,6 +38,10 @@ function App() {
             onHomeClick={() => {
               setView("home");
             }}
+            onLoginClick={() => {
+              setView("login");
+              window.scrollTo(0, 0);
+            }}
           />
           {view === "home" ? (
             <main>
@@ -52,8 +57,10 @@ function App() {
               <FAQ />
               <Contact />
             </main>
-          ) : (
+          ) : view === "careers" ? (
             <Careers onBack={() => setView("home")} />
+          ) : (
+            <ComingSoon onBack={() => setView("home")} />
           )}
           <Footer
             onCareersClick={() => {

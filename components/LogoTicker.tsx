@@ -2,16 +2,10 @@ import React from "react";
 
 const LogoTicker: React.FC = () => {
   // Using plain text for logos to avoid external SVG dependencies, styled to look like logos
-  const logos = [
-    "F-SHIP",
-    "GOOGLE ADS",
-    "META ADS",
-    "SHOPIFY",
-    "PHONEPAY",
-  ];
+  const logos = ["F-SHIP", "GOOGLE ADS", "META ADS", "SHOPIFY", "PHONEPAY"];
 
   return (
-    <div className="py-10 border-y border-border bg-background">
+    <div className="py-10  bg-background">
       <div className="max-w-7xl mx-auto px-6 mb-6 text-center">
         <p className="text-sm text-slate-500 font-medium tracking-wider uppercase">
           OFFICIAL BUISNESS PARTNERS
@@ -23,7 +17,7 @@ const LogoTicker: React.FC = () => {
           {[...logos, ...logos, ...logos].map((logo, index) => (
             <span
               key={index}
-              className="text-2xl font-bold text-slate-700 uppercase tracking-tighter hover:text-slate-500 transition-colors cursor-default select-none"
+              className="text-2xl font-bold text-text-main uppercase tracking-tighter hover:text-slate-500 transition-colors cursor-default select-none"
             >
               {logo}
             </span>

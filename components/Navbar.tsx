@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import EvocLogo from "../assets/EvocLab_Logo.png";
 
 interface NavbarProps {
   onCareersClick?: () => void;
   onHomeClick?: () => void;
+  onLoginClick?: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ onCareersClick, onHomeClick }) => {
+const Navbar: React.FC<NavbarProps> = ({
+  onCareersClick,
+  onHomeClick,
+  onLoginClick,
+}) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -80,7 +85,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCareersClick, onHomeClick }) => {
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo Section */}
         <a
-          href="#"
+          href="/"
           onClick={handleLogoClick}
           className="flex items-center gap-2"
         >
@@ -113,15 +118,13 @@ const Navbar: React.FC<NavbarProps> = ({ onCareersClick, onHomeClick }) => {
         </div>
 
         <div className="hidden md:flex items-center gap-4">
-          <a
-            href="#contact"
-            onClick={(e) => {
-              onHomeClick?.();
-            }}
-            className="bg-text-main text-background text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
+          <button
+            onClick={() => onLoginClick?.()}
+            className="group relative inline-flex items-center gap-2 px-6 py-2 rounded-lg bg-text-main text-background text-sm font-semibold tracking-wide shadow-lg hover:shadow-[0_0_20px_rgba(255,255,255,0.3)] hover:-translate-y-0.5 transition-all duration-300"
           >
             Log in
-          </a>
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
+          </button>
         </div>
 
         {/* Mobile Toggle */}
@@ -154,16 +157,16 @@ const Navbar: React.FC<NavbarProps> = ({ onCareersClick, onHomeClick }) => {
                 {link.name}
               </a>
             ))}
-            <a
-              href="#contact"
-              onClick={(e) => {
-                onHomeClick?.();
+            <button
+              onClick={() => {
+                onLoginClick?.();
                 handleLinkClick();
               }}
-              className="bg-primary text-white w-full py-3 rounded-lg font-medium text-center hover:bg-primary-hover transition-colors"
+              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-text-main text-background font-semibold hover:opacity-90 transition-all"
             >
               Log in
-            </a>
+              <ArrowRight className="w-4 h-4" />
+            </button>
           </motion.div>
         )}
       </AnimatePresence>

@@ -181,10 +181,10 @@ const Contact: React.FC = () => {
                           <option value="" className="text-text-muted">
                             Select Range
                           </option>
-                          <option value="<5k">Less than $5k</option>
-                          <option value="5k-20k">$5k – $20k</option>
-                          <option value="20k-50k">$20k – $50k</option>
-                          <option value="50k+">$50k+</option>
+                          <option value="<1L">Less than ₹1L</option>
+                          <option value="1L-3L">₹1L – ₹3L</option>
+                          <option value="3L-5L">₹3L – ₹5L</option>
+                          <option value="5L+">₹5L+</option>
                         </select>
                         <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
                           <svg

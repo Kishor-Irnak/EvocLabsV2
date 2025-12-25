@@ -103,17 +103,14 @@ const WhyChooseUs: React.FC = () => {
             transition={{ duration: 0.8, ease: "easeOut" }}
             className="order-1 lg:order-2 w-full flex items-center justify-center lg:h-auto"
           >
-            <div className="relative w-full aspect-square max-w-[450px] lg:max-w-[550px]">
+            <div className="relative w-full aspect-[4/3] md:aspect-square max-w-[450px] lg:max-w-[550px]">
               {/* Ambient Background Glow */}
               <div className="absolute inset-0 bg-blue-500/20 blur-[100px] rounded-full opacity-30 pointer-events-none" />
 
               {/* Clean Video Container */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-white/10 bg-black shadow-2xl ring-1 ring-white/5 group">
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent z-10 pointer-events-none" />
-
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/5 group [mask-image:radial-gradient(ellipse_at_center,black_30%,transparent_70%)]">
                 <video
-                  className="w-full h-full object-cover transition-opacity duration-700 opacity-100"
+                  className="w-full h-full object-cover"
                   autoPlay
                   loop
                   muted
