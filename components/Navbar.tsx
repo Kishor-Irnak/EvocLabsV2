@@ -41,7 +41,7 @@ const Navbar: React.FC<NavbarProps> = ({ onCareersClick, onHomeClick }) => {
     { name: "Process", href: "#process" },
     { name: "Results", href: "#results" },
     { name: "Why Us", href: "#why-us" },
-    { name: "Services", href: "#services" },
+    { name: "Reviews", href: "#services" },
     { name: "Founder", href: "#founder" },
     { name: "Careers", href: "#", action: "careers" },
   ];
