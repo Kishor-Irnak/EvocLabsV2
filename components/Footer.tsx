@@ -1,8 +1,12 @@
 import React from "react";
-import { Rocket, Heart, Instagram, Linkedin, Twitter } from "lucide-react";
+import { Instagram, Linkedin, Twitter } from "lucide-react";
 import EvocLogo from "../assets/EvocLab_Logo.png";
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  onCareersClick?: () => void;
+}
+
+const Footer: React.FC<FooterProps> = ({ onCareersClick }) => {
   return (
     <footer className="bg-background border-t border-border py-20">
       <div className="max-w-7xl mx-auto px-6">
@@ -90,6 +94,14 @@ const Footer: React.FC = () => {
                 </a>
               </li>
               <li>
+                <button
+                  onClick={onCareersClick}
+                  className="hover:text-primary transition-colors text-left"
+                >
+                  Careers
+                </button>
+              </li>
+              <li>
                 <a href="#" className="hover:text-primary transition-colors">
                   Case Studies
                 </a>
@@ -110,16 +122,11 @@ const Footer: React.FC = () => {
 
         <div className="pt-8 border-t border-border flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-text-muted text-sm">
-            © 2024 Evoc Labs. All rights reserved.
-          </p>
-          <p className="text-text-muted text-sm flex items-center gap-1">
-            Made with <Heart className="w-3 h-3 text-red-500 fill-red-500" />{" "}
-            for growth.
+            © 2025 Evoc Labs. All rights reserved.
           </p>
         </div>
       </div>
     </footer>
   );
 };
-
 export default Footer;

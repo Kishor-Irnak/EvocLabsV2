@@ -3,7 +3,12 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import EvocLogo from "../assets/EvocLab_Logo.png";
 
-const Navbar: React.FC = () => {
+interface NavbarProps {
+  onCareersClick?: () => void;
+  onHomeClick?: () => void;
+}
+
+const Navbar: React.FC<NavbarProps> = ({ onCareersClick, onHomeClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(true);
@@ -38,7 +43,29 @@ const Navbar: React.FC = () => {
     { name: "Why Us", href: "#why-us" },
     { name: "Services", href: "#services" },
     { name: "Founder", href: "#founder" },
+    { name: "Careers", href: "#", action: "careers" },
   ];
+
+  const handleNavAction = (
+    e: React.MouseEvent,
+    link: { name: string; href: string; action?: string }
+  ) => {
+    if (link.action === "careers") {
+      e.preventDefault();
+      onCareersClick?.();
+    } else {
+      // For other links, ensure we go to home view
+      onHomeClick?.();
+      // standard href anchor navigation continues
+    }
+    handleLinkClick();
+  };
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    onHomeClick?.();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   return (
     <nav
@@ -52,7 +79,11 @@ const Navbar: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
         {/* Logo Section */}
-        <div className="flex items-center gap-2">
+        <a
+          href="#"
+          onClick={handleLogoClick}
+          className="flex items-center gap-2"
+        >
           <div className="w-8 h-8 rounded flex items-center justify-center">
             <img
               src={EvocLogo}
@@ -63,7 +94,7 @@ const Navbar: React.FC = () => {
           <span className="font-semibold text-xl tracking-tight text-text-main">
             Evoc Labs
           </span>
-        </div>
+        </a>
 
         {/* Desktop Menu */}
         <div className="hidden md:flex items-center gap-4">
@@ -72,6 +103,7 @@ const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
+                onClick={(e) => handleNavAction(e, link)}
                 className="text-sm font-medium text-text-secondary hover:text-text-main px-4 py-2 rounded-full hover:bg-surfaceHighlight transition-colors"
               >
                 {link.name}
@@ -83,6 +115,9 @@ const Navbar: React.FC = () => {
         <div className="hidden md:flex items-center gap-4">
           <a
             href="#contact"
+            onClick={(e) => {
+              onHomeClick?.();
+            }}
             className="bg-text-main text-background text-sm font-medium px-5 py-2.5 rounded-lg hover:opacity-90 transition-opacity"
           >
             Log in
@@ -113,7 +148,7 @@ const Navbar: React.FC = () => {
               <a
                 key={link.name}
                 href={link.href}
-                onClick={handleLinkClick}
+                onClick={(e) => handleNavAction(e, link)}
                 className="text-text-secondary py-2 text-lg font-medium border-b border-border last:border-0 hover:text-text-main"
               >
                 {link.name}
@@ -121,7 +156,10 @@ const Navbar: React.FC = () => {
             ))}
             <a
               href="#contact"
-              onClick={handleLinkClick}
+              onClick={(e) => {
+                onHomeClick?.();
+                handleLinkClick();
+              }}
               className="bg-primary text-white w-full py-3 rounded-lg font-medium text-center hover:bg-primary-hover transition-colors"
             >
               Log in

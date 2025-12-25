@@ -15,8 +15,11 @@ import MarketingProfitPages from "./components/MarketingProfitPage";
 import LogoTicker from "./components/LogoTicker";
 import Process from "./components/Process";
 
+import Careers from "./components/Careers";
+
 function App() {
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<"home" | "careers">("home");
 
   return (
     <div className="bg-background min-h-screen text-text-main font-sans selection:bg-primary/30 selection:text-primary-hover">
@@ -26,21 +29,38 @@ function App() {
 
       {!loading && (
         <>
-          <Navbar />
-          <main>
-            <Hero />
-            <MarketingProfitPages />
-            <LogoTicker />
-            <Process />
-            <Testimonials />
-            <Results />
-            <WhyChooseUs />
-            <Services />
-            <Founder />
-            <FAQ />
-            <Contact />
-          </main>
-          <Footer />
+          <Navbar
+            onCareersClick={() => {
+              setView("careers");
+              window.scrollTo(0, 0);
+            }}
+            onHomeClick={() => {
+              setView("home");
+            }}
+          />
+          {view === "home" ? (
+            <main>
+              <Hero />
+              <MarketingProfitPages />
+              <LogoTicker />
+              <Process />
+              <Testimonials />
+              <Results />
+              <WhyChooseUs />
+              <Services />
+              <Founder />
+              <FAQ />
+              <Contact />
+            </main>
+          ) : (
+            <Careers onBack={() => setView("home")} />
+          )}
+          <Footer
+            onCareersClick={() => {
+              setView("careers");
+              window.scrollTo(0, 0);
+            }}
+          />
         </>
       )}
     </div>
