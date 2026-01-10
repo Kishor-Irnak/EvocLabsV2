@@ -82,8 +82,9 @@ const Contact: React.FC = () => {
               </div>
 
               <a
-                href="#"
-                onClick={(e) => e.preventDefault()}
+                href="https://calendly.com/connect-sociodesk/evoc-labz"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="inline-flex items-center justify-center w-full bg-text-main hover:bg-text-main/90 text-background font-medium py-3 rounded-xl transition-all active:scale-[0.98]"
               >
                 Schedule Now
