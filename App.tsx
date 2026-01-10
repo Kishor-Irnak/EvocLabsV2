@@ -1,4 +1,10 @@
 import React, { useState } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import { AnimatePresence } from "framer-motion";
 import Navbar from "./components/Navbar";
 import Hero from "./components/Hero";
@@ -14,73 +20,155 @@ import Contact from "./components/Contact";
 import MarketingProfitPages from "./components/MarketingProfitPage";
 import LogoTicker from "./components/LogoTicker";
 import Process from "./components/Process";
-
 import Careers from "./components/Careers";
 import ComingSoon from "./components/ComingSoon";
 import BookDemo from "./components/BookDemo";
 
-function App() {
-  const [loading, setLoading] = useState(true);
-  const [view, setView] = useState<"home" | "careers" | "login" | "book-demo">(
-    "home"
-  );
+// Home Page Component
+const HomePage = () => {
+  const navigate = useNavigate();
 
   return (
-    <div className="bg-background min-h-screen text-text-main font-sans selection:bg-primary/30 selection:text-primary-hover">
-      <AnimatePresence mode="wait">
-        {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
-      </AnimatePresence>
+    <>
+      <Navbar
+        onCareersClick={() => {
+          navigate("/careers");
+          window.scrollTo(0, 0);
+        }}
+        onHomeClick={() => {
+          navigate("/");
+        }}
+        onLoginClick={() => {
+          navigate("/login");
+          window.scrollTo(0, 0);
+        }}
+      />
+      <main>
+        <Hero
+          onBookDemoClick={() => {
+            navigate("/book-demo");
+            window.scrollTo(0, 0);
+          }}
+        />
+        <MarketingProfitPages />
+        <LogoTicker />
+        <Process />
+        <Testimonials />
+        <Results />
+        <WhyChooseUs />
+        <Services />
+        <Founder />
+        <FAQ />
+        <Contact />
+      </main>
+      <Footer
+        onCareersClick={() => {
+          navigate("/careers");
+          window.scrollTo(0, 0);
+        }}
+      />
+    </>
+  );
+};
 
-      {!loading && (
-        <>
-          <Navbar
-            onCareersClick={() => {
-              setView("careers");
-              window.scrollTo(0, 0);
-            }}
-            onHomeClick={() => {
-              setView("home");
-            }}
-            onLoginClick={() => {
-              setView("login");
-              window.scrollTo(0, 0);
-            }}
-          />
-          {view === "home" ? (
-            <main>
-              <Hero
-                onBookDemoClick={() => {
-                  setView("book-demo");
-                  window.scrollTo(0, 0);
-                }}
-              />
-              <MarketingProfitPages />
-              <LogoTicker />
-              <Process />
-              <Testimonials />
-              <Results />
-              <WhyChooseUs />
-              <Services />
-              <Founder />
-              <FAQ />
-              <Contact />
-            </main>
-          ) : view === "careers" ? (
-            <Careers onBack={() => setView("home")} />
-          ) : view === "book-demo" ? (
-            <BookDemo onBack={() => setView("home")} />
-          ) : (
-            <ComingSoon onBack={() => setView("home")} />
-          )}
-          <Footer
-            onCareersClick={() => {
-              setView("careers");
-              window.scrollTo(0, 0);
-            }}
-          />
-        </>
-      )}
-    </div>
+// Careers Page Component
+const CareersPage = () => {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Navbar
+        onCareersClick={() => {
+          navigate("/careers");
+        }}
+        onHomeClick={() => {
+          navigate("/");
+        }}
+        onLoginClick={() => {
+          navigate("/login");
+        }}
+      />
+      <Careers onBack={() => navigate("/")} />
+      <Footer
+        onCareersClick={() => {
+          navigate("/careers");
+        }}
+      />
+    </>
+  );
+};
+
+// Book Demo Page Component
+const BookDemoPage = () => {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Navbar
+        onCareersClick={() => {
+          navigate("/careers");
+          window.scrollTo(0, 0);
+        }}
+        onHomeClick={() => {
+          navigate("/");
+        }}
+        onLoginClick={() => {
+          navigate("/login");
+          window.scrollTo(0, 0);
+        }}
+      />
+      <BookDemo onBack={() => navigate("/")} />
+    </>
+  );
+};
+
+// Login/Coming Soon Page Component
+const LoginPage = () => {
+  const navigate = useNavigate();
+
+  return (
+    <>
+      <Navbar
+        onCareersClick={() => {
+          navigate("/careers");
+        }}
+        onHomeClick={() => {
+          navigate("/");
+        }}
+        onLoginClick={() => {
+          navigate("/login");
+        }}
+      />
+      <ComingSoon onBack={() => navigate("/")} />
+      <Footer
+        onCareersClick={() => {
+          navigate("/careers");
+        }}
+      />
+    </>
+  );
+};
+
+function App() {
+  const [loading, setLoading] = useState(true);
+
+  return (
+    <Router>
+      <div className="bg-background min-h-screen text-text-main font-sans selection:bg-primary/30 selection:text-primary-hover">
+        <AnimatePresence mode="wait">
+          {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
+        </AnimatePresence>
+
+        {!loading && (
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/careers" element={<CareersPage />} />
+            <Route path="/book-demo" element={<BookDemoPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        )}
+      </div>
+    </Router>
   );
 }
 
