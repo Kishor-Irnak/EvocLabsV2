@@ -222,6 +222,7 @@ const Contact: React.FC = () => {
                         name="website"
                         value={formData.website}
                         onChange={handleInputChange}
+                        required
                         className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-text-muted/30 focus:scale-[1.01]"
                         placeholder="https://..."
                       />
@@ -236,6 +237,7 @@ const Contact: React.FC = () => {
                           name="budget"
                           value={formData.budget}
                           onChange={handleInputChange}
+                          required
                           className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
                         >
                           <option value="" className="text-text-muted">
