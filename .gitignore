@@ -24,3 +24,8 @@ dist-ssr
 *.sw?
 
 .vercel
+.env 
+server/ 
+Procfile 
+BACKEND_DEPLOYMENT.md 
+test-api.js 

@@ -12,6 +12,61 @@ import BlurText from "./BlurText";
 
 const Contact: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    website: '',
+    budget: '',
+    message: ''
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    if (error) setError('');
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+    setError('');
+    
+    try {
+      const apiUrl = typeof window !== 'undefined' && window.location.hostname !== 'localhost' 
+        ? 'https://evoc-labz-backend.onrender.com/api/book-demo' // Your actual Render URL
+        : '/api/book-demo';
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          workEmail: formData.email,
+          website: formData.website,
+          budget: formData.budget,
+          goals: formData.message
+        }),
+      });
+      
+      if (response.ok) {
+        setIsSubmitted(true);
+      } else {
+        const result = await response.json();
+        setError(result.error || 'Failed to submit form. Please try again.');
+      }
+    } catch (err) {
+      console.error('Error submitting form:', err);
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   return (
     <section
@@ -109,22 +164,14 @@ const Contact: React.FC = () => {
             <div className="p-6 md:p-8 lg:p-10 rounded-3xl border border-border bg-surface shadow-2xl shadow-black/5">
               {!isSubmitted ? (
                 <form
-                  action="https://formsubmit.co/kishorirnak4u@gmail.com"
-                  method="POST"
+                  onSubmit={handleSubmit}
                   className="space-y-5"
-                  onSubmit={() => setIsSubmitted(true)}
                 >
-                  <input type="hidden" name="_captcha" value="false" />
-                  <input
-                    type="hidden"
-                    name="_subject"
-                    value="New Contact Request - EvocLabs"
-                  />
-                  <input
-                    type="hidden"
-                    name="_next"
-                    value="https://evoclabs.com/success"
-                  />
+                  {error && (
+                    <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-500 text-sm">
+                      {error}
+                    </div>
+                  )}
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     {/* Name */}
@@ -135,6 +182,8 @@ const Contact: React.FC = () => {
                       <input
                         type="text"
                         name="name"
+                        value={formData.name}
+                        onChange={handleInputChange}
                         required
                         className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-text-muted/30 focus:scale-[1.01]"
                         placeholder="John Doe"
@@ -149,6 +198,8 @@ const Contact: React.FC = () => {
                       <input
                         type="email"
                         name="email"
+                        value={formData.email}
+                        onChange={handleInputChange}
                         required
                         className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-text-muted/30 focus:scale-[1.01]"
                         placeholder="john@company.com"
@@ -165,6 +216,8 @@ const Contact: React.FC = () => {
                       <input
                         type="url"
                         name="website"
+                        value={formData.website}
+                        onChange={handleInputChange}
                         className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all placeholder:text-text-muted/30 focus:scale-[1.01]"
                         placeholder="https://..."
                       />
@@ -177,6 +230,8 @@ const Contact: React.FC = () => {
                       <div className="relative">
                         <select
                           name="budget"
+                          value={formData.budget}
+                          onChange={handleInputChange}
                           className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all appearance-none cursor-pointer"
                         >
                           <option value="" className="text-text-muted">
@@ -213,6 +268,8 @@ const Contact: React.FC = () => {
                     </label>
                     <textarea
                       name="message"
+                      value={formData.message}
+                      onChange={handleInputChange}
                       rows={3} // Reduced rows slightly to fit desktop better
                       className="w-full bg-background border border-border rounded-xl px-4 py-3 text-text-main focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all resize-none placeholder:text-text-muted/30 focus:scale-[1.01]"
                       placeholder="Tell us about your goals..."
@@ -222,9 +279,10 @@ const Contact: React.FC = () => {
                   {/* Submit Button */}
                   <button
                     type="submit"
-                    className="group w-full bg-text-main hover:bg-text-secondary text-border font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98]"
+                    disabled={isLoading}
+                    className="group w-full bg-text-main hover:bg-text-secondary text-border font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    Send Request
+                    {isLoading ? 'Sending...' : 'Send Request'}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
 
