@@ -4,7 +4,7 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig(({ mode }) => {
   return {
-    base: "/", // ✅ REQUIRED for custom domain
+    base: "/EvocLabsV2/", // ✅ Adjusted for GitHub Pages subfolder
 
     server: {
       port: 3000,
