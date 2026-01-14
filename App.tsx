@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import {
-  BrowserRouter as Router,
+  HashRouter as Router,
   Routes,
   Route,
   useNavigate,
@@ -153,7 +153,7 @@ function App() {
   const [loading, setLoading] = useState(true);
 
   return (
-    <Router basename={(import.meta as any).env.BASE_URL}>
+    <Router>
       <div className="bg-background min-h-screen text-text-main font-sans selection:bg-primary/30 selection:text-primary-hover">
         <AnimatePresence mode="wait">
           {loading && <LoadingScreen onComplete={() => setLoading(false)} />}
