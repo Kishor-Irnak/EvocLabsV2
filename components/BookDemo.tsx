@@ -23,7 +23,7 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
   const [error, setError] = useState("");
 
   const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
@@ -58,6 +58,16 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
       };
 
       await addDoc(collection(db, "formSubmissions"), formSubmissionData);
+
+      // Track Meta Pixel Lead event
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "Lead", {
+          content_name: "Book Demo Form",
+          content_category: formData.category,
+          value: 0,
+          currency: "INR",
+        });
+      }
 
       // Also send to existing API endpoint
       const apiBase =

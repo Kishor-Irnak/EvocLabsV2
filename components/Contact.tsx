@@ -16,29 +16,33 @@ const Contact: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    website: '',
-    budget: '',
-    message: ''
+    name: "",
+    email: "",
+    website: "",
+    budget: "",
+    message: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
-    if (error) setError('');
+    if (error) setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    setError('');
-    
+    setError("");
+
     try {
       // Save to Firebase Firestore
       const formSubmissionData = {
@@ -47,50 +51,60 @@ const Contact: React.FC = () => {
         website: formData.website,
         budget: formData.budget,
         message: formData.message,
-        formType: 'contact',
+        formType: "contact",
         timestamp: serverTimestamp(),
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       };
 
-      await addDoc(collection(db, 'formSubmissions'), formSubmissionData);
+      await addDoc(collection(db, "formSubmissions"), formSubmissionData);
+
+      // Track Meta Pixel Contact event
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "Contact", {
+          content_name: "Contact Form",
+          value: 0,
+          currency: "INR",
+        });
+      }
 
       // Also send to existing API endpoint (keeping existing functionality)
       const apiBase =
         (import.meta as any)?.env?.VITE_API_BASE_URL ||
-        (typeof window !== 'undefined' && window.location.hostname !== 'localhost'
-          ? 'https://evoc-labz-backend.onrender.com'
-          : 'http://localhost:5000');
-      const apiUrl = `${apiBase.replace(/\/+$/, '')}/api/book-demo`;
-      
+        (typeof window !== "undefined" &&
+        window.location.hostname !== "localhost"
+          ? "https://evoc-labz-backend.onrender.com"
+          : "http://localhost:5000");
+      const apiUrl = `${apiBase.replace(/\/+$/, "")}/api/book-demo`;
+
       try {
         const response = await fetch(apiUrl, {
-          method: 'POST',
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: formData.name,
             workEmail: formData.email,
             website: formData.website,
             budget: formData.budget,
-            goals: formData.message
+            goals: formData.message,
           }),
         });
-        
+
         if (!response.ok) {
           const result = await response.json();
-          console.warn('API submission failed:', result.error);
+          console.warn("API submission failed:", result.error);
           // Don't fail the form submission if API fails, Firebase save succeeded
         }
       } catch (apiErr) {
-        console.warn('API submission error:', apiErr);
+        console.warn("API submission error:", apiErr);
         // Don't fail the form submission if API fails, Firebase save succeeded
       }
-      
+
       setIsSubmitted(true);
     } catch (err) {
-      console.error('Error submitting form:', err);
-      setError('An error occurred. Please try again.');
+      console.error("Error submitting form:", err);
+      setError("An error occurred. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -191,10 +205,7 @@ const Contact: React.FC = () => {
             {/* Form Container */}
             <div className="p-6 md:p-8 lg:p-10 rounded-3xl border border-border bg-surface shadow-2xl shadow-black/5">
               {!isSubmitted ? (
-                <form
-                  onSubmit={handleSubmit}
-                  className="space-y-5"
-                >
+                <form onSubmit={handleSubmit} className="space-y-5">
                   {error && (
                     <div className="bg-red-500/10 border border-red-500/30 rounded-lg p-3 text-red-500 text-sm">
                       {error}
@@ -312,7 +323,7 @@ const Contact: React.FC = () => {
                     disabled={isLoading}
                     className="group w-full bg-text-main hover:bg-text-secondary text-border font-semibold py-4 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-primary/20 active:scale-[0.98] disabled:opacity-70 disabled:cursor-not-allowed"
                   >
-                    {isLoading ? 'Sending...' : 'Send Request'}
+                    {isLoading ? "Sending..." : "Send Request"}
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </button>
 
