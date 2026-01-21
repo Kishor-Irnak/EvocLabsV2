@@ -17,6 +17,7 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
     name: "",
     phoneNumber: "",
     category: "",
+    revenueRange: "",
     agreedToTerms: false,
   });
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +53,7 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
         name: formData.name,
         phoneNumber: formData.phoneNumber,
         category: formData.category,
+        revenueRange: formData.revenueRange,
         formType: "book-demo",
         timestamp: serverTimestamp(),
         createdAt: new Date().toISOString(),
@@ -225,7 +227,51 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
                         </option>
                         <option value="home">Home & Living</option>
                         <option value="food">Food & Beverage</option>
+                        <option value="wholesaler">Wholesaler</option>
+                        <option value="dropshipping">Dropshipping</option>
                         <option value="other">Other</option>
+                      </select>
+                      <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
+                        <svg
+                          className="w-4 h-4"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M19 9l-7 7-7-7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Revenue Range */}
+                  <div className="space-y-2">
+                    <label className="text-sm font-bold text-text-main flex items-center gap-1">
+                      Monthly revenue range{" "}
+                      <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <select
+                        name="revenueRange"
+                        value={formData.revenueRange}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full bg-surface border border-border rounded-lg px-4 py-3 text-sm text-text-main focus:border-text-main focus:ring-0 outline-none transition-all appearance-none cursor-pointer placeholder:text-text-muted/60"
+                      >
+                        <option value="" disabled>
+                          Select
+                        </option>
+                        <option value="20000-30000">₹20,000 – ₹30,000</option>
+                        <option value="30000-50000">₹30,000 – ₹50,000</option>
+                        <option value="50000-70000">₹50,000 – ₹70,000</option>
+                        <option value="70000-100000">
+                          ₹70,000 – ₹1,00,000
+                        </option>
                       </select>
                       <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-text-muted">
                         <svg
