@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Mail,
   Clock,
@@ -14,6 +14,20 @@ import BlurText from "./BlurText";
 
 const Contact: React.FC = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "https://assets.calendly.com/assets/external/widget.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    return () => {
+      // Clean up script on unmount
+      if (document.body.contains(script)) {
+        document.body.removeChild(script);
+      }
+    };
+  }, []);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -151,41 +165,13 @@ const Contact: React.FC = () => {
               opinion on your current ad stack — we're here to help.
             </p>
 
-            {/* Premium Strategy Card */}
-            <div className="p-6 md:p-8 rounded-2xl border border-border bg-surface/50 backdrop-blur-sm shadow-sm hover:shadow-md transition-shadow duration-300">
-              <div className="flex items-start justify-between mb-4">
-                <div>
-                  <h4 className="text-lg font-semibold text-text-main">
-                    Book a Strategy Call
-                  </h4>
-                  <p className="text-text-muted text-sm mt-1">
-                    30-min discovery session with a strategist.
-                  </p>
-                </div>
-                <div className="bg-primary/10 p-2 rounded-lg">
-                  <Sparkles className="w-5 h-5 text-primary" />
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-4 mb-6">
-                <div className="flex items-center gap-2 text-text-main text-sm bg-background px-3 py-1.5 rounded-md border border-border">
-                  <Clock className="w-4 h-4 text-primary" />
-                  <span>30 Minutes</span>
-                </div>
-                <div className="flex items-center gap-2 text-text-main text-sm bg-background px-3 py-1.5 rounded-md border border-border">
-                  <Video className="w-4 h-4 text-primary" />
-                  <span>Google Meet</span>
-                </div>
-              </div>
-
-              <a
-                href="https://calendly.com/connect-sociodesk/evoc-labz"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center justify-center w-full bg-text-main hover:bg-text-main/90 text-background font-medium py-3 rounded-xl transition-all active:scale-[0.98]"
-              >
-                Schedule Now
-              </a>
+            {/* Calendly Inline Widget */}
+            <div className="rounded-3xl border border-border bg-white overflow-hidden shadow-2xl shadow-primary/5">
+              <div
+                className="calendly-inline-widget"
+                data-url="https://calendly.com/connect-sociodesk/evoc-labz?hide_event_type_details=1&hide_gdpr_banner=1"
+                style={{ minWidth: "320px", height: "700px" }}
+              ></div>
             </div>
 
             <div className="mt-8 flex items-center gap-3 text-text-muted text-sm font-medium">
