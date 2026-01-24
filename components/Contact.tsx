@@ -170,7 +170,7 @@ const Contact: React.FC = () => {
               <div
                 className="calendly-inline-widget"
                 data-url="https://calendly.com/connect-sociodesk/evoc-labz?hide_event_type_details=1&hide_gdpr_banner=1"
-                style={{ minWidth: "320px", height: "700px" }}
+                style={{ minWidth: "320px", height: "500px" }}
               ></div>
             </div>
 
@@ -189,7 +189,7 @@ const Contact: React.FC = () => {
             className="relative"
           >
             {/* Form Container */}
-            <div className="p-6 md:p-8 lg:p-10 rounded-3xl border border-border bg-surface shadow-2xl shadow-black/5">
+            <div className="p-6 mt-12 md:p-8 lg:p-10 rounded-3xl border border-border bg-surface shadow-2xl shadow-black/5">
               {!isSubmitted ? (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   {error && (
