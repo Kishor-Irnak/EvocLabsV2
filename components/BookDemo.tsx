@@ -71,7 +71,10 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
         });
       }
 
-      // Also send to existing API endpoint
+      // Show success state immediately
+      setIsSubmitted(true);
+
+      // Secondary API call (Background task)
       const apiBase =
         (import.meta as any)?.env?.VITE_API_BASE_URL ||
         (typeof window !== "undefined" &&
@@ -80,24 +83,15 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
           : "http://localhost:5000");
       const apiUrl = `${apiBase.replace(/\/+$/, "")}/api/book-demo`;
 
-      try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formSubmissionData),
-        });
-
-        if (!response.ok) {
-          const result = await response.json();
-          console.warn("API submission failed:", result.error);
-        }
-      } catch (apiErr) {
-        console.warn("API submission error:", apiErr);
-      }
-
-      setIsSubmitted(true);
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formSubmissionData),
+      }).catch((apiErr) => {
+        console.warn("Background API submission error:", apiErr);
+      });
     } catch (err) {
       console.error("Error submitting form:", err);
       setError("An error occurred. Please try again.");

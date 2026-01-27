@@ -81,7 +81,10 @@ const Contact: React.FC = () => {
         });
       }
 
-      // Also send to existing API endpoint (keeping existing functionality)
+      // Show success state immediately after Firebase save
+      setIsSubmitted(true);
+
+      // Secondary API call (Non-blocking background task)
       const apiBase =
         (import.meta as any)?.env?.VITE_API_BASE_URL ||
         (typeof window !== "undefined" &&
@@ -90,32 +93,21 @@ const Contact: React.FC = () => {
           : "http://localhost:5000");
       const apiUrl = `${apiBase.replace(/\/+$/, "")}/api/book-demo`;
 
-      try {
-        const response = await fetch(apiUrl, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            workEmail: formData.email,
-            website: formData.website,
-            budget: formData.budget,
-            goals: formData.message,
-          }),
-        });
-
-        if (!response.ok) {
-          const result = await response.json();
-          console.warn("API submission failed:", result.error);
-          // Don't fail the form submission if API fails, Firebase save succeeded
-        }
-      } catch (apiErr) {
-        console.warn("API submission error:", apiErr);
-        // Don't fail the form submission if API fails, Firebase save succeeded
-      }
-
-      setIsSubmitted(true);
+      fetch(apiUrl, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          workEmail: formData.email,
+          website: formData.website,
+          budget: formData.budget,
+          goals: formData.message,
+        }),
+      }).catch((apiErr) => {
+        console.warn("Background API submission error:", apiErr);
+      });
     } catch (err) {
       console.error("Error submitting form:", err);
       setError("An error occurred. Please try again.");
