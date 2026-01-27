@@ -12,13 +12,26 @@ export default defineConfig(({ mode }) => {
     },
 
     plugins: [react()],
-
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "."),
       },
     },
-
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            "firebase-vendor": [
+              "firebase/app",
+              "firebase/firestore",
+              "firebase/analytics",
+            ],
+            "ui-vendor": ["framer-motion", "lucide-react"],
+            "charts-vendor": ["recharts"],
+          },
+        },
+      },
+    },
     optimizeDeps: {
       include: ["firebase/app", "firebase/firestore", "firebase/analytics"],
     },
