@@ -72,15 +72,6 @@ const Contact: React.FC = () => {
 
       await addDoc(collection(db, "formSubmissions"), formSubmissionData);
 
-      // Track Meta Pixel Contact event
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Contact", {
-          content_name: "Contact Form",
-          value: 0,
-          currency: "INR",
-        });
-      }
-
       // Show success state immediately after Firebase save
       setIsSubmitted(true);
 

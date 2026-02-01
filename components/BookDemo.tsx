@@ -61,16 +61,6 @@ const BookDemo: React.FC<BookDemoProps> = ({ onBack }) => {
 
       await addDoc(collection(db, "formSubmissions"), formSubmissionData);
 
-      // Track Meta Pixel Lead event
-      if (typeof window !== "undefined" && (window as any).fbq) {
-        (window as any).fbq("track", "Lead", {
-          content_name: "Book Demo Form",
-          content_category: formData.category,
-          value: 0,
-          currency: "INR",
-        });
-      }
-
       // Show success state immediately
       setIsSubmitted(true);
 
